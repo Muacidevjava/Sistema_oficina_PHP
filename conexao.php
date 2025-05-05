@@ -9,7 +9,7 @@ try{
     //conexao mysqli para o backup
     $conn = mysqli_connect($servidor,$usuario,$senha,$banco);
 }catch(PDOException $e){
-    echo "erro com banco de dados: ".$e->getMessage();
+    echo "erro ao conectar com o banco de dados: ".$e->getMessage();
     exit();}
 
 
