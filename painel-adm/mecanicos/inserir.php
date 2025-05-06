@@ -37,7 +37,7 @@ $res->bindValue(":cpf", $cpf);
 $res->bindValue(":email", $email);
 $res->bindValue(":endereco", $endereco);
 $res->execute();
-echo "Salvo com sucesso"; 
+ echo "Salvo com Sucesso!!"; 
 
 ?>
 
