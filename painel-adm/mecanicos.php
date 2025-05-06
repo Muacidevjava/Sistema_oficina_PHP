@@ -1,18 +1,20 @@
 <?php 
 $pag = "mecanicos";
 require_once("../conexao.php"); 
+/*
 @session_start();
     //verificar se o usuário está autenticado
 if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != 'Admin'){
     echo "<script language='javascript'> window.location='../index.php' </script>";
 
 }
+    */
 
 
 ?>
 
 <div class="row mt-4 mb-4">
-    <a type="button" class="btn-primary btn-sm ml-3 d-none d-md-block" href="index.php?pag=<?php echo $pag ?>&funcao=novo">Nova Característica</a>
+    <a type="button" class="btn-primary btn-sm ml-3 d-none d-md-block" href="index.php?pag=<?php echo $pag ?>&funcao=novo">Novo Mecânico</a>
     <a type="button" class="btn-primary btn-sm ml-3 d-block d-sm-none" href="index.php?pag=<?php echo $pag ?>&funcao=novo">+</a>
     
 </div>
@@ -28,7 +30,10 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != 'Admin'){
                 <thead>
                     <tr>
                         <th>Nome</th>
-                       
+                        <th>CPF</th>
+                        <th>Telefone</th>
+                        <th>Endereço</th>
+                        <th>Email</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
@@ -37,7 +42,7 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != 'Admin'){
 
                    <?php 
 
-                   $query = $pdo->query("SELECT * FROM carac order by id desc ");
+                   $query = $pdo->query("SELECT * FROM mecanicos order by id desc ");
                    $res = $query->fetchAll(PDO::FETCH_ASSOC);
 
                    for ($i=0; $i < count($res); $i++) { 
