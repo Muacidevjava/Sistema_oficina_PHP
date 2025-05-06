@@ -1,6 +1,6 @@
 <?php
 require_once("conexao.php");
-
+@session_start();
 $email = $_POST['email'];
 $senha = $_POST['senha'];
 
@@ -13,10 +13,11 @@ $query->execute();
 $total_reg = $query->rowCount();
 if($total_reg > 0){
     $res = $query->fetchAll(PDO::FETCH_ASSOC);
-    session_start();
-    $_SESSION['id'] = $res[0]['id'];
-    $_SESSION['nome'] = $res[0]['nome'];
-    $_SESSION['nivel'] = $res[0]['nivel'];
+    // session_start();
+    $_SESSION['id_usuario'] = $res[0]['id'];
+    $_SESSION['nome_usuario'] = $res[0]['nome'];
+    $_SESSION['cpf_usuario'] = $res[0]['cpf'];
+    $_SESSION['nivel_usuario'] = $res[0]['nivel'];
     
     // Redirecionamento baseado no nível do usuário
     if($_SESSION['nivel'] == 'admin'){
