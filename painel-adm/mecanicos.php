@@ -1,6 +1,6 @@
-<?php 
+<?php
 $pag = "mecanicos";
-require_once("../conexao.php"); 
+require_once("../conexao.php");
 /*
 @session_start();
     //verificar se o usuário está autenticado
@@ -16,7 +16,7 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != 'Admin'){
 <div class="row mt-4 mb-4">
     <a type="button" class="btn-primary btn-sm ml-3 d-none d-md-block" href="index.php?pag=<?php echo $pag ?>&funcao=novo">Novo Mecânico</a>
     <a type="button" class="btn-primary btn-sm ml-3 d-block d-sm-none" href="index.php?pag=<?php echo $pag ?>&funcao=novo">+</a>
-    
+
 </div>
 
 
@@ -40,34 +40,44 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != 'Admin'){
 
                 <tbody>
 
-                   <?php 
+                    <?php
 
-                   $query = $pdo->query("SELECT * FROM mecanicos order by id desc ");
-                   $res = $query->fetchAll(PDO::FETCH_ASSOC);
+                    $query = $pdo->query("SELECT * FROM mecanicos order by id desc ");
+                    $res = $query->fetchAll(PDO::FETCH_ASSOC);
 
-                   for ($i=0; $i < count($res); $i++) { 
-                      foreach ($res[$i] as $key => $value) {
-                      }
+                    for ($i = 0; $i < count($res); $i++) {
+                        foreach ($res[$i] as $key => $value) {
+                        }
 
-                      $nome = $res[$i]['nome'];
-                      
-                      
-                      $id = $res[$i]['id'];
+                        $nome = $res[$i]['nome'];
+                        $cpf = $res[$i]['cpf'];
+                        $telefone = $res[$i]['telefone'];
+                        $endereco = $res[$i]['endereco'];
+                        $email = $res[$i]['email'];
+                        $id = $res[$i]['id'];
 
-                       
-                      ?>
+
+                        $id = $res[$i]['id'];
 
 
-                    <tr>
-                        <td><?php echo $nome ?></td>
-                       
+                    ?>
 
-                        <td>
-                             <a href="index.php?pag=<?php echo $pag ?>&funcao=editar&id=<?php echo $id ?>" class='text-primary mr-1' title='Editar Dados'><i class='far fa-edit'></i></a>
-                            <a href="index.php?pag=<?php echo $pag ?>&funcao=excluir&id=<?php echo $id ?>" class='text-danger mr-1' title='Excluir Registro'><i class='far fa-trash-alt'></i></a>
-                        </td>
-                    </tr>
-<?php } ?>
+
+                        <tr>
+                            <td><?php echo $nome ?></td>
+                            <td><?php echo $cpf ?></td>
+                            <td><?php echo $telefone ?></td>
+                            <td><?php echo $endereco ?></td>
+                            <td><?php echo $email ?></td>
+                            
+
+
+                            <td>
+                                <a href="index.php?pag=<?php echo $pag ?>&funcao=editar&id=<?php echo $id ?>" class='text-primary mr-1' title='Editar Dados'><i class='far fa-edit'></i></a>
+                                <a href="index.php?pag=<?php echo $pag ?>&funcao=excluir&id=<?php echo $id ?>" class='text-danger mr-1' title='Excluir Registro'><i class='far fa-trash-alt'></i></a>
+                            </td>
+                        </tr>
+                    <?php } ?>
 
 
 
@@ -88,7 +98,7 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != 'Admin'){
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <?php 
+                <?php
                 if (@$_GET['funcao'] == 'editar') {
                     $titulo = "Editar Registro";
                     $id2 = $_GET['id'];
@@ -97,16 +107,13 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != 'Admin'){
                     $res = $query->fetchAll(PDO::FETCH_ASSOC);
 
                     $nome2 = $res[0]['nome'];
-                                                            
-
                 } else {
                     $titulo = "Inserir Registro";
-
                 }
 
 
                 ?>
-                
+
                 <h5 class="modal-title" id="exampleModalLabel"><?php echo $titulo ?></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
@@ -116,18 +123,18 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != 'Admin'){
                 <div class="modal-body">
 
                     <div class="form-group">
-                        <label >Nome</label>
+                        <label>Nome</label>
                         <input value="<?php echo @$nome2 ?>" type="text" class="form-control" id="nome-cat" name="nome-cat" placeholder="Nome">
                     </div>
 
-                  
-                   
+
+
 
                     <small>
                         <div id="mensagem">
 
                         </div>
-                    </small> 
+                    </small>
 
                 </div>
 
@@ -137,8 +144,8 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != 'Admin'){
 
 
 
-                <input value="<?php echo @$_GET['id'] ?>" type="hidden" name="txtid2" id="txtid2">
-                <input value="<?php echo @$nome2 ?>" type="hidden" name="antigo" id="antigo">
+                    <input value="<?php echo @$_GET['id'] ?>" type="hidden" name="txtid2" id="txtid2">
+                    <input value="<?php echo @$nome2 ?>" type="hidden" name="antigo" id="antigo">
 
                     <button type="button" id="btn-fechar" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                     <button type="submit" name="btn-salvar" id="btn-salvar" class="btn btn-primary">Salvar</button>
@@ -175,7 +182,7 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != 'Admin'){
                 <button type="button" class="btn btn-secondary" data-dismiss="modal" id="btn-cancelar-excluir">Cancelar</button>
                 <form method="post">
 
-                    <input type="hidden" id="id"  name="id" value="<?php echo @$_GET['id'] ?>" required>
+                    <input type="hidden" id="id" name="id" value="<?php echo @$_GET['id'] ?>" required>
 
                     <button type="button" id="btn-deletar" name="btn-deletar" class="btn btn-danger">Excluir</button>
                 </form>
@@ -188,7 +195,7 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != 'Admin'){
 
 
 
-<?php 
+<?php
 
 if (@$_GET["funcao"] != null && @$_GET["funcao"] == "novo") {
     echo "<script>$('#modalDados').modal('show');</script>";
@@ -209,8 +216,8 @@ if (@$_GET["funcao"] != null && @$_GET["funcao"] == "excluir") {
 
 <!--AJAX PARA INSERÇÃO E EDIÇÃO DOS DADOS COM IMAGEM -->
 <script type="text/javascript">
-    $("#form").submit(function () {
-        var pag = "<?=$pag?>";
+    $("#form").submit(function() {
+        var pag = "<?= $pag ?>";
         event.preventDefault();
         var formData = new FormData(this);
 
@@ -219,16 +226,16 @@ if (@$_GET["funcao"] != null && @$_GET["funcao"] == "excluir") {
             type: 'POST',
             data: formData,
 
-            success: function (mensagem) {
+            success: function(mensagem) {
 
                 $('#mensagem').removeClass()
 
                 if (mensagem.trim() == "Salvo com Sucesso!!") {
-                    
+
                     //$('#nome').val('');
                     //$('#cpf').val('');
                     $('#btn-fechar').click();
-                    window.location = "index.php?pag="+pag;
+                    window.location = "index.php?pag=" + pag;
 
                 } else {
 
@@ -242,10 +249,10 @@ if (@$_GET["funcao"] != null && @$_GET["funcao"] == "excluir") {
             cache: false,
             contentType: false,
             processData: false,
-            xhr: function () {  // Custom XMLHttpRequest
+            xhr: function() { // Custom XMLHttpRequest
                 var myXhr = $.ajaxSettings.xhr();
                 if (myXhr.upload) { // Avalia se tem suporte a propriedade upload
-                    myXhr.upload.addEventListener('progress', function () {
+                    myXhr.upload.addEventListener('progress', function() {
                         /* faz alguma coisa durante o progresso do upload */
                     }, false);
                 }
@@ -261,9 +268,9 @@ if (@$_GET["funcao"] != null && @$_GET["funcao"] == "excluir") {
 
 <!--AJAX PARA EXCLUSÃO DOS DADOS -->
 <script type="text/javascript">
-    $(document).ready(function () {
-        var pag = "<?=$pag?>";
-        $('#btn-deletar').click(function (event) {
+    $(document).ready(function() {
+        var pag = "<?= $pag ?>";
+        $('#btn-deletar').click(function(event) {
             event.preventDefault();
 
             $.ajax({
@@ -271,7 +278,7 @@ if (@$_GET["funcao"] != null && @$_GET["funcao"] == "excluir") {
                 method: "post",
                 data: $('form').serialize(),
                 dataType: "text",
-                success: function (mensagem) {
+                success: function(mensagem) {
 
                     if (mensagem.trim() === 'Excluído com Sucesso!!') {
 
@@ -295,14 +302,13 @@ if (@$_GET["funcao"] != null && @$_GET["funcao"] == "excluir") {
 
 <!--SCRIPT PARA CARREGAR IMAGEM -->
 <script type="text/javascript">
-
     function carregarImg() {
 
         var target = document.getElementById('target');
         var file = document.querySelector("input[type=file]").files[0];
         var reader = new FileReader();
 
-        reader.onloadend = function () {
+        reader.onloadend = function() {
             target.src = reader.result;
         };
 
@@ -314,7 +320,6 @@ if (@$_GET["funcao"] != null && @$_GET["funcao"] == "excluir") {
             target.src = "";
         }
     }
-
 </script>
 
 
@@ -322,13 +327,10 @@ if (@$_GET["funcao"] != null && @$_GET["funcao"] == "excluir") {
 
 
 <script type="text/javascript">
-    $(document).ready(function () {
+    $(document).ready(function() {
         $('#dataTable').dataTable({
             "ordering": false
         })
 
     });
 </script>
-
-
-
