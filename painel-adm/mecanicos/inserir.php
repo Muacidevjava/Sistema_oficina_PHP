@@ -62,22 +62,45 @@ if($id == ""){ // Se for um novo cadastro
 
 if ($id == "") {
    //Metodo para inserir dados no banco de dados
-   $res = $pdo->prepare("INSERT INTO mecanicos (nome, telefone, cpf, email, endereco) VALUES (:nome, :telefone, :cpf, :email, :endereco)");
+   $res = $pdo->prepare("INSERT INTO mecanicos (nome, telefone, cpf, email, endereco) VALUES (:nome, :telefone, :cpf, :email, :endereco) ");
+   
+   $res2 = $pdo->prepare("INSERT INTO usuarios (nome, nivel, cpf, email, senha) VALUES (:nome, :nivel, :cpf, :email, :senha)");
+   
+   $res->bindValue(":nome", $nome);
+   $res->bindValue(":telefone", $telefone);
+   $res->bindValue(":cpf", $cpf);
+   $res->bindValue(":email", $email);
+   $res->bindValue(":endereco", $endereco);
+   $res->execute();
+
+   $res2->bindValue(":nome", $nome);
+   $res2->bindValue(":nivel", 'mecanico');
+   $res2->bindValue(":cpf", $cpf);
+   $res2->bindValue(":email", $email);
+   $res2->bindValue(":senha", '123');
+   $res2->execute();
 }
 else {
     //Metodo para atualizar dados no banco de dados
     $res = $pdo->prepare("UPDATE mecanicos SET nome = :nome, telefone = :telefone, cpf = :cpf, email = :email, endereco = :endereco WHERE id = :id");
     $res->bindValue(":id", $id);
+    $res->bindValue(":nome", $nome);
+    $res->bindValue(":telefone", $telefone);
+    $res->bindValue(":cpf", $cpf);
+    $res->bindValue(":email", $email);
+    $res->bindValue(":endereco", $endereco);
+    $res->execute();
+
+    // Atualizar também na tabela usuarios
+    $res2 = $pdo->prepare("UPDATE usuarios SET nome = :nome, cpf = :cpf, email = :email WHERE cpf = :cpf_antigo");
+    $res2->bindValue(":nome", $nome);
+    $res2->bindValue(":cpf", $cpf);
+    $res2->bindValue(":email", $email);
+    $res2->bindValue(":cpf_antigo", $antigo);
+    $res2->execute();
 }
 
-$res->bindValue(":nome", $nome);
-$res->bindValue(":telefone", $telefone);
-$res->bindValue(":cpf", $cpf);
-$res->bindValue(":email", $email);
-$res->bindValue(":endereco", $endereco);
-$res->execute();
- echo "Salvo com Sucesso!!"; 
-
+echo "Salvo com Sucesso!!"; 
 ?>
 
 
