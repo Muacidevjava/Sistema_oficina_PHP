@@ -311,7 +311,7 @@ if (@$_GET["funcao"] != null && @$_GET["funcao"] == "excluir") {
                 data: $('form').serialize(),
                 dataType: "text",
                 success: function(mensagem) {
-                    if (mensagem.trim() === 'Excluído com Sucesso!!') {
+                    if (mensagem.trim() === 'Excluído com Sucesso!') {
                         $('#mensagem_excluir').addClass('text-success')
                         $('#mensagem_excluir').text(mensagem)
                         setTimeout(function() {
