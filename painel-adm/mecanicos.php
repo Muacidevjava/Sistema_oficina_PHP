@@ -128,7 +128,7 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != 'Admin'){
 
                     <div class="form-group">
                         <label>Nome</label>
-                        <input value="<?php echo @$nome2 ?>" type="text" class="form-control" id="nome-mec" name="nome-mec" placeholder="Nome">
+                        <input value="<?php echo @$nome2 ?>" type="text" class="form-control" id="nome_mec" name="nome_mec" placeholder="Nome">
                     </div>
 
                     <div class="row">
@@ -141,7 +141,7 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != 'Admin'){
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>Telefone</label>
-                                <input value="<?php echo @$telefone2 ?>" type="text" class="form-control" id="telefone" name="telefone-mec" placeholder="Telefone">
+                                <input value="<?php echo @$telefone2 ?>" type="text" class="form-control" id="telefone" name="telefone_mec" placeholder="Telefone">
                             </div>
                         </div>
                     </div>
@@ -150,11 +150,11 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != 'Admin'){
 
                     <div class="form-group">
                         <label>Endereço</label>
-                        <input value="<?php echo @$endereco2 ?>" type="text" class="form-control" id="endereco" name="endereco-mec" placeholder="Endereço">
+                        <input value="<?php echo @$endereco2 ?>" type="text" class="form-control" id="endereco" name="endereco_mec" placeholder="Endereço">
                     </div>
                     <div class="form-group">
                         <label>Email</label>
-                        <input value="<?php echo @$email2 ?>" type="text" class="form-control" id="email" name="email-mec" placeholder="email">
+                        <input value="<?php echo @$email2 ?>" type="text" class="form-control" id="email" name="email_mec" placeholder="email">
                     </div>
 
 
@@ -361,7 +361,7 @@ if (@$_GET["funcao"] != null && @$_GET["funcao"] == "excluir") {
 <script type="text/javascript">
     $(document).ready(function() {
         $('#dataTable').dataTable({
-            "ordering": false
+            "ordering": true
         })
 
     });
