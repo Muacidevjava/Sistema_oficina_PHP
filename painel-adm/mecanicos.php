@@ -57,7 +57,7 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != 'Admin'){
                         $id = $res[$i]['id'];
 
 
-                      
+
 
 
                     ?>
@@ -130,24 +130,34 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != 'Admin'){
                         <label>Nome</label>
                         <input value="<?php echo @$nome2 ?>" type="text" class="form-control" id="nome-mec" name="nome-mec" placeholder="Nome">
                     </div>
-                    <div class="form-group">
-                        <label>CPF</label>
-                        <input value="<?php echo @$cpf2 ?>" type="text" class="form-control" id="cpf" name="cpf_mec" placeholder="CPF">
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>CPF</label>
+                                <input value="<?php echo @$cpf2 ?>" type="text" class="form-control" id="cpf" name="cpf_mec" placeholder="CPF">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Telefone</label>
+                                <input value="<?php echo @$telefone2 ?>" type="text" class="form-control" id="telefone" name="telefone-mec" placeholder="Telefone">
+                            </div>
+                        </div>
                     </div>
+
+
+
                     <div class="form-group">
-                        <label>Telefone</label>
-                        <input value="<?php echo @$telefone2 ?>" type="text" class="form-control" id="telefone" name="telefone-mec" placeholder="Nome">
-                    </div>
-                   <div class="form-group">
                         <label>Endereço</label>
                         <input value="<?php echo @$endereco2 ?>" type="text" class="form-control" id="endereco" name="endereco-mec" placeholder="Endereço">
                     </div>
                     <div class="form-group">
                         <label>Email</label>
-                        <input value="<?php echo @$email2?>" type="text" class="form-control" id="email" name="email-mec" placeholder="email">
+                        <input value="<?php echo @$email2 ?>" type="text" class="form-control" id="email" name="email-mec" placeholder="email">
                     </div>
 
-                   
+
 
 
 
