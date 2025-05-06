@@ -7,6 +7,7 @@ $email = $_POST['email_mec'];
 $endereco = $_POST['endereco_mec'];
 
 $antigo = $_POST['antigo'];
+$antigo2 = $_POST['antigo2'];
 $id = $_POST['txtid2'];
 
 if($nome == ""){
@@ -32,6 +33,32 @@ if($tota_reg > 0){
 	exit();
 }
 }
+//verificar se o Registro com email já existe no banco de dados
+if($id == ""){ // Se for um novo cadastro
+    $query = $pdo->prepare("SELECT * FROM mecanicos WHERE email = :email");
+    $query->bindValue(":email", $email);
+    $query->execute();
+    
+    $total_reg = $query->rowCount();
+    if($total_reg > 0){
+        echo 'Email já cadastrado em outra conta!';
+        exit();
+    }
+} else { // Se for uma edição
+    if($antigo2 != $email){
+        $query = $pdo->prepare("SELECT * FROM mecanicos WHERE email = :email AND id != :id");
+        $query->bindValue(":email", $email);
+        $query->bindValue(":id", $id);
+        $query->execute();
+        
+        $total_reg = $query->rowCount();
+        if($total_reg > 0){
+            echo 'Email já cadastrado em outra conta!';
+            exit();
+        }
+    }
+}
+
 
 if ($id == "") {
    //Metodo para inserir dados no banco de dados
