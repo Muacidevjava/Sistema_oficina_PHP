@@ -103,10 +103,14 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != 'Admin'){
                     $titulo = "Editar Registro";
                     $id2 = $_GET['id'];
 
-                    $query = $pdo->query("SELECT * FROM carac where id = '" . $id2 . "' ");
+                    $query = $pdo->query("SELECT * FROM mecanicos where id = '" . $id2 . "' ");
                     $res = $query->fetchAll(PDO::FETCH_ASSOC);
 
                     $nome2 = $res[0]['nome'];
+                    $cpf2 = $res[0]['cpf'];
+                    $telefone2 = $res[0]['telefone'];
+                    $endereco2 = $res[0]['endereco'];
+                    $email2 = $res[0]['email'];
                 } else {
                     $titulo = "Inserir Registro";
                 }
