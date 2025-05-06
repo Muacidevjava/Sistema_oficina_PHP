@@ -57,7 +57,7 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != 'Admin'){
                         $id = $res[$i]['id'];
 
 
-                        $id = $res[$i]['id'];
+                      
 
 
                     ?>
@@ -69,7 +69,7 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != 'Admin'){
                             <td><?php echo $telefone ?></td>
                             <td><?php echo $endereco ?></td>
                             <td><?php echo $email ?></td>
-                            
+
 
 
                             <td>
