@@ -1,3 +1,23 @@
+<?php
+require_once ('conexao.php');
+
+// Verificar se existe usuário admin
+$query = $pdo->prepare("SELECT * FROM usuarios WHERE nivel = :nivel");
+$query->bindValue(":nivel", "admin");
+$query->execute();
+$total_reg = $query->rowCount();
+
+if($total_reg == 0){
+    // Criar usuário admin padrão usando prepared statement
+    $res = $pdo->prepare("INSERT INTO usuarios (nome, cpf, email, senha, nivel) VALUES (:nome, :cpf, :email, :senha, :nivel)");
+    $res->bindValue(":nome", "Administrador");
+    $res->bindValue(":cpf", "00000000000");
+    $res->bindValue(":email", "admin@admin.com");
+    $res->bindValue(":senha", "123456");
+    $res->bindValue(":nivel", "admin");
+    $res->execute();
+}
+?>
 <!DOCTYPE html>
 <html lang='pt-br'>
 <head>
