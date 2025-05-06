@@ -1,11 +1,24 @@
 <?php 
 session_start();
+require_once("../conexao.php");
 
 // Verificação de acesso do administrador
 if($_SESSION['nivel_usuario'] == null || $_SESSION['nivel_usuario'] != 'admin') {
-  echo "<script>window.location='../index.php'</script>";
+    echo "<script>window.location='../index.php'</script>";
+    exit();
 }
 
+//recuperar dados do usuario logado
+$query = $pdo->prepare("SELECT * FROM usuarios WHERE id = :id");
+$query->bindValue(":id", $_SESSION['id_usuario']);
+$query->execute();
+$res = $query->fetch(PDO::FETCH_ASSOC);
+
+$nome_usu = $res['nome'];
+$cpf_usu = $res['cpf'];
+$email_usu = $res['email'];
+$idUsuario = $res['id'];
+$cpf = $res['cpf']; // para o campo antigo
 
 //variaveis para o menu
 $pag = @$_GET["pag"];
@@ -70,6 +83,9 @@ $menu6 = "menu6";
 
                 <!-- Divider -->
                 <hr class="sidebar-divider my-0">
+
+
+
 
 
 
@@ -265,42 +281,33 @@ $menu6 = "menu6";
 
 
 
+
                     <form id="form-perfil" method="POST" enctype="multipart/form-data">
                         <div class="modal-body">
 
-                            <div class="row">
-                                <div class="col-md-6 col-sm-12">
+                     
                                     <div class="form-group">
                                         <label >Nome</label>
-                                        <input value="<?php echo $nome ?>" type="text" class="form-control" id="nome" name="nome" placeholder="Nome">
+                                        <input value="<?php echo $nome_usu ?>" type="text" class="form-control" id="nome" name="nome" placeholder="Nome">
                                     </div>
 
                                     <div class="form-group">
                                         <label >CPF</label>
-                                        <input value="<?php echo $cpf ?>" type="text" class="form-control" id="cpf" name="cpf" placeholder="CPF">
+                                        <input value="<?php echo $cpf_usu ?>" type="text" class="form-control" id="cpf" name="cpf" placeholder="CPF">
                                     </div>
 
                                     <div class="form-group">
                                         <label >Email</label>
-                                        <input value="<?php echo $email ?>" type="email" class="form-control" id="email" name="email" placeholder="Email">
+                                        <input value="<?php echo $email_usu ?>" type="email" class="form-control" id="email" name="email" placeholder="Email">
                                     </div>
 
                                     <div class="form-group">
                                         <label >Senha</label>
                                         <input value="" type="password" class="form-control" id="text" name="senha" placeholder="Senha">
                                     </div>
-                                </div>
-                                <div class="col-md-6 col-sm-12">
-                                    <div class="col-md-12 form-group">
-                                        <label>Foto</label>
-                                        <input value="<?php echo $img ?>" type="file" class="form-control-file" id="imagem" name="imagem" onchange="carregarImg();">
+                              
 
-                                    </div>
-                                    <div class="col-md-12 mb-2">
-                                        <img src="../img/profiles/<?php echo $img ?>" alt="Carregue sua Imagem" id="target" width="100%">
-                                    </div>
-                                </div>
-                            </div> 
+
 
 
 
