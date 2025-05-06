@@ -1,4 +1,10 @@
 <?php
+session_start();
+
+// Verificação de acesso do administrador
+if($_SESSION['nivel_usuario'] == null || $_SESSION['nivel_usuario'] != 'admin') {
+  echo "<script>window.location='../index.php'</script>";
+}
 $pag = "mecanicos";
 require_once("../conexao.php");
 /*

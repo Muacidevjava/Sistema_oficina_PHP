@@ -1,13 +1,20 @@
 <?php 
+session_start();
 
-    //variaveis para o menu
-    $pag = @$_GET["pag"];
-    $menu1 = "mecanicos";
-    $menu2 = "recepcionistas";
-    $menu3 = "menu3";
-    $menu4 = "menu4";
-    $menu5 = "menu5";
-    $menu6 = "menu6";
+// Verificação de acesso do administrador
+if($_SESSION['nivel_usuario'] == null || $_SESSION['nivel_usuario'] != 'admin') {
+  echo "<script>window.location='../index.php'</script>";
+}
+
+
+//variaveis para o menu
+$pag = @$_GET["pag"];
+$menu1 = "mecanicos";
+$menu2 = "recepcionistas";
+$menu3 = "menu3";
+$menu4 = "menu4";
+$menu5 = "menu5";
+$menu6 = "menu6";
   
 
  ?>
@@ -63,6 +70,7 @@
 
                 <!-- Divider -->
                 <hr class="sidebar-divider my-0">
+
 
 
 
@@ -163,7 +171,7 @@
                             <!-- Nav Item - User Information -->
                             <li class="nav-item dropdown no-arrow">
                                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="mr-2 d-none d-lg-inline text-gray-600 small">Nome do usuario</span>
+                                    <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $_SESSION['nome_usuario']; ?></span>
                                     <img class="img-profile rounded-circle" src="../img/sem-foto.jpg">
 
                                 </a>
@@ -242,6 +250,7 @@
 
 
 
+
         <!--  Modal Perfil-->
         <div class="modal fade" id="ModalPerfil" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
@@ -252,6 +261,7 @@
                             <span aria-hidden="true">×</span>
                         </button>
                     </div>
+
 
 
 
