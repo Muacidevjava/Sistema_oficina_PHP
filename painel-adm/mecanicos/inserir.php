@@ -11,15 +11,25 @@ $id = $_POST['txtid2'];
 
 
 //verificar se o Registro já existe no banco de dados
-$query = $pdo->query("SELECT * FROM mecanicos where cpf ='$cpf'");
+if($antigo != $cpf){
+	$query = $pdo->query("SELECT * FROM mecanicos where cpf ='$cpf'");
 $res = $query->fetchAll(PDO::FETCH_ASSOC);
 $tota_reg = @count($res);
 if($tota_reg > 0){
 	echo 'CPF já cadastrado!';
 	exit();
 }
-//Metodo para inserir dados no banco de dados
-$res = $pdo->prepare("INSERT INTO mecanicos (nome, telefone, cpf, email, endereco) VALUES (:nome, :telefone, :cpf, :email, :endereco)");
+}
+
+if ($id == "") {
+   //Metodo para inserir dados no banco de dados
+   $res = $pdo->prepare("INSERT INTO mecanicos (nome, telefone, cpf, email, endereco) VALUES (:nome, :telefone, :cpf, :email, :endereco)");
+}
+else {
+    //Metodo para atualizar dados no banco de dados
+    $res = $pdo->prepare("UPDATE mecanicos SET nome = :nome, telefone = :telefone, cpf = :cpf, email = :email, endereco = :endereco WHERE id = :id");
+    $res->bindValue(":id", $id);
+}
 
 $res->bindValue(":nome", $nome);
 $res->bindValue(":telefone", $telefone);
@@ -27,5 +37,9 @@ $res->bindValue(":cpf", $cpf);
 $res->bindValue(":email", $email);
 $res->bindValue(":endereco", $endereco);
 $res->execute();
-echo "salvo com sucesso";
+echo "Salvo com sucesso"; 
+
 ?>
+
+
+
