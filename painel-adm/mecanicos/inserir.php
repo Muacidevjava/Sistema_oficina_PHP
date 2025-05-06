@@ -9,6 +9,18 @@ $endereco = $_POST['endereco_mec'];
 $antigo = $_POST['antigo'];
 $id = $_POST['txtid2'];
 
+if($nome == ""){
+	echo "O nome é obrigatório!";
+	exit();
+}
+if($email == ""){
+	echo "O email é obrigatório!";
+	exit();
+}
+if($cpf == ""){
+	echo "O cpf é obrigatório!";
+	exit();
+}
 
 //verificar se o Registro já existe no banco de dados
 if($antigo != $cpf){

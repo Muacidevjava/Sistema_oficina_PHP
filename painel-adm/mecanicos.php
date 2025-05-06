@@ -263,15 +263,15 @@ if (@$_GET["funcao"] != null && @$_GET["funcao"] == "excluir") {
                 $('#mensagem').removeClass()
 
                 if (mensagem.trim() == "Salvo com Sucesso!!") {
-
-                    //$('#nome').val('');
-                    //$('#cpf').val('');
-                    $('#btn-fechar').click();
-                    window.location = "index.php?pag=" + pag;
-
+                    $('#mensagem').addClass('text-success')
+                    $('#mensagem').text(mensagem)
+                    setTimeout(function() {
+                        $('#btn-fechar').click();
+                        window.location = "index.php?pag=" + pag;
+                    }, 2000); // 2 segundos de atraso
                 } else {
-
                     $('#mensagem').addClass('text-danger')
+                    $('#mensagem').text(mensagem)
                 }
 
                 $('#mensagem').text(mensagem)
@@ -311,20 +311,18 @@ if (@$_GET["funcao"] != null && @$_GET["funcao"] == "excluir") {
                 data: $('form').serialize(),
                 dataType: "text",
                 success: function(mensagem) {
-
                     if (mensagem.trim() === 'Excluído com Sucesso!!') {
-
-
-                        $('#btn-cancelar-excluir').click();
-                        window.location = "index.php?pag=" + pag;
+                        $('#mensagem_excluir').addClass('text-success')
+                        $('#mensagem_excluir').text(mensagem)
+                        setTimeout(function() {
+                            $('#btn-cancelar-excluir').click();
+                            window.location = "index.php?pag=" + pag;
+                        }, 2000); // 2 segundos de atraso
+                    } else {
+                        $('#mensagem_excluir').addClass('text-danger')
+                        $('#mensagem_excluir').text(mensagem)
                     }
-
-                    $('#mensagem_excluir').text(mensagem)
-
-
-
                 },
-
             })
         })
     })
