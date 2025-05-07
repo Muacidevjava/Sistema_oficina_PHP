@@ -170,9 +170,9 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != 'Admin'){
 
                 <p>Deseja realmente Excluir este Registro?</p>
 
-                <div align="center" id="mensagem_excluir" class="">
+                <small><div align="center" id="mensagem_excluir" class="">
 
-                </div>
+                </div></small>
 
             </div>
             <div class="modal-footer">
