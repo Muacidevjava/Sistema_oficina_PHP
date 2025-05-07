@@ -408,22 +408,28 @@ if (@$_GET["funcao"] != null && @$_GET["funcao"] == "excluir") {
 
 <script type="text/javascript">
     $(document).ready(function() {
-        document.getElementById('divcnpj').style.display = 'none';
-     
-    });
-
-    $('#pessoa').change(function() {
-        var value = $(this).val();
-        
-        if (value === 'Física') {
-            $('#divcnpj').hide();
-            $('#divcpf').show();
-            $('#cnpj').val('');
-        } else {
+        // Verifica o tipo de pessoa ao carregar
+        var tipoPessoa = $('#pessoa').val();
+        if (tipoPessoa === 'Jurídica') {
             $('#divcnpj').show();
             $('#divcpf').hide();
-            $('#cpf').val('');
+        } else {
+            $('#divcnpj').hide();
+            $('#divcpf').show();
         }
+        
+        // Monitora mudanças no select
+        $('#pessoa').change(function() {
+            var value = $(this).val();
+            if (value === 'Física') {
+                $('#divcnpj').hide();
+                $('#divcpf').show();
+                $('#cnpj').val('');
+            } else {
+                $('#divcnpj').show();
+                $('#divcpf').hide();
+                $('#cpf').val('');
+            }
+        });
     });
-
 </script>
