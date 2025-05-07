@@ -41,7 +41,8 @@ try {
 } catch(PDOException $e) {
     echo "Erro ao recuperar senha: " . $e->getMessage();
 }
+//criar email função para enviar email com senha nova
+//enviar email com senha nova
 ?>
 
-//criar email funcção para enviara email com senha nova
-//enviar email com senha nova
+a
