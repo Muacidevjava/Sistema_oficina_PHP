@@ -101,6 +101,8 @@ if($total_reg == 0){
             color: #ffffff;
         }
     </style>
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous"> -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script> -->
 </head>
 
 <body>
@@ -113,7 +115,7 @@ if($total_reg == 0){
             <input type="password" name="senha" placeholder="Senha" required="required" />
             <button type="submit" class="btn btn-login">Entrar</button>
             <div align="center" class="mt-2"> 
-              <small><a href="" title="Clique para Recuperar sua Senha" class="text-light"> Recuperar Senha?</a></small>
+              <small><a href="#" data-toggle="modal" data-target="#modalRecuperar" title="Clique para Recuperar sua Senha" class="text-light">Recuperar Senha?</a></small>
            </div>
         </form>
     </div>
@@ -121,5 +123,63 @@ if($total_reg == 0){
     <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+    <!-- Modal Recuperar Senha -->
+    <div class="modal fade" id="modalRecuperar" tabindex="-1" role="dialog" aria-labelledby="modalRecuperarLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalRecuperarLabel">Recuperar Senha</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="form-recuperar" method="POST">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Digite seu Email</label>
+                            <input type="email" class="form-control" id="email-recuperar" name="email" placeholder="Email" required>
+                        </div>
+                        <small><div id="mensagem-recuperar"></div></small>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                        <button type="submit" class="btn btn-primary">Recuperar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $("#form-recuperar").submit(function () {
+            event.preventDefault();
+            var formData = new FormData(this);
+
+            $.ajax({
+                url: "recuperar-senha.php",
+                type: 'POST',
+                data: formData,
+                success: function (mensagem) {
+                    $('#mensagem-recuperar').removeClass()
+                    if (mensagem.trim() == "Senha Enviada para seu Email!") {
+                        $('#mensagem-recuperar').addClass('text-success')
+                        $('#mensagem-recuperar').text(mensagem)
+                        $('#email-recuperar').val('')
+                        setTimeout(function() {
+                            $('#modalRecuperar').modal('hide');
+                        }, 3000)
+                    } else {
+                        $('#mensagem-recuperar').addClass('text-danger')
+                        $('#mensagem-recuperar').text(mensagem)
+                    }
+                },
+                cache: false,
+                contentType: false,
+                processData: false
+            });
+        });
+    </script>
 </body>
 </html>
+
