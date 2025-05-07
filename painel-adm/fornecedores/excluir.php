@@ -3,22 +3,24 @@ require_once("../../conexao.php");
 
 $id = $_POST['id'];
 
-// Buscar o CPF do mecânico antes de excluir
-$query = $pdo->prepare("SELECT cpf FROM mecanicos WHERE id = :id");
-$query->bindValue(":id", $id);
-$query->execute();
-$res = $query->fetchAll(PDO::FETCH_ASSOC);
-$cpf = $res[0]['cpf'];
-
-// Excluir da tabela mecanicos
-$res = $pdo->prepare("DELETE FROM mecanicos WHERE id = :id");
-$res->bindValue(":id", $id);
-$res->execute();
-
-// Excluir também da tabela usuarios
-$res = $pdo->prepare("DELETE FROM usuarios WHERE cpf = :cpf");
-$res->bindValue(":cpf", $cpf);
-$res->execute();
-
-echo "Excluído com Sucesso!";
+try {
+    // Buscar o fornecedor antes de excluir
+    $query = $pdo->prepare("SELECT cpf FROM fornecedores WHERE id = :id");
+    $query->bindValue(":id", $id);
+    $query->execute();
+    $res = $query->fetchAll(PDO::FETCH_ASSOC);
+    
+    if(count($res) > 0) {
+        // Excluir o fornecedor
+        $delete = $pdo->prepare("DELETE FROM fornecedores WHERE id = :id");
+        $delete->bindValue(":id", $id);
+        $delete->execute();
+        
+        echo "Excluído com Sucesso!";
+    } else {
+        echo "Fornecedor não encontrado!";
+    }
+} catch(PDOException $e) {
+    echo "Erro ao excluir: " . $e->getMessage();
+}
 ?>
