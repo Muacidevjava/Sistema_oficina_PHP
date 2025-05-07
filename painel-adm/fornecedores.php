@@ -147,9 +147,9 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != 'Admin'){
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>Tipo Pessoa</label>
-                                <select class="form-control" aria-label="Default select example" id="exmapleFormControlSelect1">
+                                <select class="form-control" aria-label="Default select example" id="pessoa">
                                   
-                                    <option value="fisca">Física</option>
+                                    <option value="fisica">Física</option>
                                     <option value="juridica">Juridica</option>
                                     
                                 </select>
@@ -400,7 +400,24 @@ if (@$_GET["funcao"] != null && @$_GET["funcao"] == "excluir") {
 
 <script type="text/javascript">
     $(document).ready(function() {
-            
-    })
+        document.getElementById('divcnpj').style.display = 'none';
+     
+    });
+
+    $('#pessoa').click(function(event) {
+        var select = document.getElementById('pessoa');
+        var value = select.options[select.selectedIndex].value;
+
+        if (value === 'fisica')
+         {
+            document.getElementById('divcnpj').style.display = 'none';
+            document.getElementById('divcpf').style.display = 'block';
+       
+         }else{
+            document.getElementById('divcnpj').style.display = 'block';
+            document.getElementById('divcpf').style.display = 'none';
+         }
+    });
+     
 
 </script>
