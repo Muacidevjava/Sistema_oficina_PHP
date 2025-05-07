@@ -32,7 +32,7 @@ try {
         $res_update->bindValue(":email", $email);
         $res_update->execute();
         
-        // Como é uma versão básica, apenas exibimos a senha
+        // Como é uma versão básica, apenas exibo a senha
         echo "Sua nova senha é: " . $nova_senha;
         
     } else {
