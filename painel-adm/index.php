@@ -24,7 +24,7 @@ $cpf = $res['cpf']; // para o campo antigo
 $pag = @$_GET["pag"];
 $menu1 = "mecanicos";
 $menu2 = "recepcionistas";
-$menu3 = "menu3";
+$menu3 = "fornecedores";
 $menu4 = "menu4";
 $menu5 = "menu5";
 $menu6 = "menu6";
@@ -110,6 +110,7 @@ $menu6 = "menu6";
                             <h6 class="collapse-header">PESSOAS:</h6>
                             <a class="collapse-item" href="index.php?pag=<?php echo $menu1 ?>">Mecanicos</a>
                             <a class="collapse-item" href="index.php?pag=<?php echo $menu2 ?>">Recepcionistas</a>
+                            <a class="collapse-item" href="index.php?pag=<?php echo $menu3 ?>">Fornecedores</a>
                         </div>
                     </div>
                 </li>
