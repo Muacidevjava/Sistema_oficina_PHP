@@ -5,7 +5,7 @@ $id = $_POST['id'];
 
 try {
     // Verificar se existem produtos vinculados a esta categoria
-    $check = $pdo->prepare("SELECT COUNT(*) FROM produtos WHERE categoria_id = :id");
+    $check = $pdo->prepare("SELECT COUNT(*) FROM produtos WHERE categoria = :id");
     $check->bindValue(":id", $id);
     $check->execute();
     

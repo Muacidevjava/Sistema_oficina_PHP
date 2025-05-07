@@ -2,8 +2,8 @@
 session_start();
 
 // Verificação de acesso do administrador
-if($_SESSION['nivel_usuario'] == null || $_SESSION['nivel_usuario'] != 'admin') {
-  echo "<script>window.location='../index.php'</script>";
+if ($_SESSION['nivel_usuario'] == null || $_SESSION['nivel_usuario'] != 'admin') {
+    echo "<script>window.location='../index.php'</script>";
 }
 $pag = "categoria";
 require_once("../conexao.php");
@@ -53,10 +53,12 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != 'Admin'){
                         }
 
                         $nome = $res[$i]['nome'];
-                        
+
                         $id = $res[$i]['id'];
 
-
+                        $query_tot = $pdo->query("SELECT * FROM produtos where categoria = $id");
+                        $res_tot = $query_tot->fetchAll(PDO::FETCH_ASSOC);
+                        $total_produtos = @count($res_tot);
 
 
 
@@ -65,11 +67,7 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != 'Admin'){
 
                         <tr>
                             <td><?php echo $nome ?></td>
-                            <td><?php echo $total_produtos ?></td>
-                           
-
-
-
+                            <td><?php echo @$total_produtos . " Produtos" ?></td>
                             <td>
                                 <a href="index.php?pag=<?php echo $pag ?>&funcao=editar&id=<?php echo $id ?>" class='text-primary mr-1' title='Editar Dados'><i class='far fa-edit'></i></a>
                                 <a href="index.php?pag=<?php echo $pag ?>&funcao=excluir&id=<?php echo $id ?>" class='text-danger mr-1' title='Excluir Registro'><i class='far fa-trash-alt'></i></a>
@@ -104,7 +102,6 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != 'Admin'){
                     $query = $pdo->query("SELECT * FROM categorias where id = '" . $id2 . "' ");
                     $res = $query->fetchAll(PDO::FETCH_ASSOC);
                     $nome2 = $res[0]['nome'];
-                  
                 } else {
                     $titulo = "Inserir Registro";
                 }
@@ -223,14 +220,15 @@ if (@$_GET["funcao"] != null && @$_GET["funcao"] == "excluir") {
 
         $.ajax({
             url: pag + "/inserir.php",
-            type: 'POST',            data: formData,
+            type: 'POST',
+            data: formData,
             success: function(mensagem) {
                 $('#mensagem').removeClass();
-                
+
                 if (mensagem.trim() == "Salvo com Sucesso!") {
                     $('#mensagem').addClass('text-success');
                     $('#mensagem').text(mensagem);
-                    
+
                     // Fechar o modal após 2 segundos
                     setTimeout(function() {
                         $('#btn-fechar').click();
@@ -318,4 +316,3 @@ if (@$_GET["funcao"] != null && @$_GET["funcao"] == "excluir") {
 
     });
 </script>
-
