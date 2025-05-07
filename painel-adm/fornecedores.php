@@ -147,11 +147,9 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != 'Admin'){
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>Tipo Pessoa</label>
-                                <select class="form-control" aria-label="Default select example" id="pessoa">
-                                  
-                                    <option value="fisica">Física</option>
-                                    <option value="juridica">Juridica</option>
-                                    
+                                <select name="tipo_pessoa_mec" class="form-control" id="pessoa">
+                                    <option value="Física" <?php if(@$tipo_pessoa2 == 'Física'){echo 'selected';}?>>Física</option>
+                                    <option value="Jurídica" <?php if(@$tipo_pessoa2 == 'Jurídica'){echo 'selected';}?>>Jurídica</option>
                                 </select>
                             </div>
 
@@ -161,13 +159,23 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != 'Admin'){
                         <div class="col-md-6" id="divcpf">
                             <div class="form-group">
                                 <label>CPF</label>
-                                <input value="<?php echo @$cpf2 ?>" type="text" class="form-control" id="cpf" name="cpf_mec" placeholder="CPF ">
+                                <input value="<?php echo isset($tipo_pessoa2) && $tipo_pessoa2 == 'Física' ? @$cpf2 : ''; ?>" 
+                                       type="text" 
+                                       class="form-control" 
+                                       id="cpf" 
+                                       name="cpf_mec" 
+                                       placeholder="CPF">
                             </div>
                         </div>
-                        <div class="col-md-6" id="divcnpj" >
+                        <div class="col-md-6" id="divcnpj">
                             <div class="form-group">
                                 <label>CNPJ</label>
-                                <input value="<?php echo @$cpf2 ?>" type="text" class="form-control" id="cnpj" name="cnpj_mec" placeholder=" CNPJ">
+                                <input value="<?php echo isset($tipo_pessoa2) && $tipo_pessoa2 == 'Jurídica' ? @$cpf2 : ''; ?>" 
+                                       type="text" 
+                                       class="form-control" 
+                                       id="cnpj" 
+                                       name="cnpj_mec" 
+                                       placeholder="CNPJ">
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -404,20 +412,18 @@ if (@$_GET["funcao"] != null && @$_GET["funcao"] == "excluir") {
      
     });
 
-    $('#pessoa').click(function(event) {
-        var select = document.getElementById('pessoa');
-        var value = select.options[select.selectedIndex].value;
-
-        if (value === 'fisica')
-         {
-            document.getElementById('divcnpj').style.display = 'none';
-            document.getElementById('divcpf').style.display = 'block';
-       
-         }else{
-            document.getElementById('divcnpj').style.display = 'block';
-            document.getElementById('divcpf').style.display = 'none';
-         }
+    $('#pessoa').change(function() {
+        var value = $(this).val();
+        
+        if (value === 'Física') {
+            $('#divcnpj').hide();
+            $('#divcpf').show();
+            $('#cnpj').val('');
+        } else {
+            $('#divcnpj').show();
+            $('#divcpf').hide();
+            $('#cpf').val('');
+        }
     });
-     
 
 </script>
