@@ -25,8 +25,8 @@ $pag = @$_GET["pag"];
 $menu1 = "mecanicos";
 $menu2 = "recepcionistas";
 $menu3 = "fornecedores";
-$menu4 = "menu4";
-$menu5 = "menu5";
+$menu4 = "categoria";
+$menu5 = "produtos";
 $menu6 = "menu6";
   
 
@@ -107,7 +107,7 @@ $menu6 = "menu6";
                     </a>
                     <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
-                            <h6 class="collapse-header">PESSOAS:</h6>
+                            <!-- <h6 class="collapse-header">PESSOAS:</h6> -->
                             <a class="collapse-item" href="index.php?pag=<?php echo $menu1 ?>">Mecanicos</a>
                             <a class="collapse-item" href="index.php?pag=<?php echo $menu2 ?>">Recepcionistas</a>
                             <a class="collapse-item" href="index.php?pag=<?php echo $menu3 ?>">Fornecedores</a>
@@ -118,15 +118,15 @@ $menu6 = "menu6";
                 <!-- Nav Item - Utilities Collapse Menu -->
                 <li class="nav-item">
                     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
-                        <i class="fas fa-home"></i>
-                        <span>Opções XX</span>
+                        <i class="fas fa-plus"></i>
+                        <span>Produtos</span>
                     </a>
                     <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
-                            <h6 class="collapse-header">Dados XX:</h6>
-                            <a class="collapse-item" href="index.php?pag=<?php echo $menu3 ?>">Menu 3</a>
-                            <a class="collapse-item" href="index.php?pag=<?php echo $menu4 ?>">Menu 4</a>
-                            <a class="collapse-item" href="index.php?pag=<?php echo $menu5 ?>">Menu 5</a>
+                            <!-- <h6 class="collapse-header">Dados XX:</h6> -->
+                            <a class="collapse-item" href="index.php?pag=<?php echo $menu4 ?>">Categorias</a>
+                            <a class="collapse-item" href="index.php?pag=<?php echo $menu5 ?>">Produtos</a>
+                            <a class="collapse-item" href="index.php?pag=<?php echo $menu6 ?>">Menu 5</a>
 
                         </div>
                     </div>
