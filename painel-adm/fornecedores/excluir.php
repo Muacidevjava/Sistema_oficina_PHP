@@ -43,7 +43,7 @@ try {
         exit();     
     }
     // Verificar se existem produtos vinculados a este fornecedor
-    $check_produtos = $pdo->prepare("SELECT COUNT(*) FROM produtos WHERE id = :id");
+    $check_produtos = $pdo->prepare("SELECT COUNT(*) FROM produtos WHERE fornecedor = :id");
     $check_produtos->bindValue(":id", $id);
     $check_produtos->execute();
 
