@@ -42,3 +42,6 @@ try {
     echo "Erro ao recuperar senha: " . $e->getMessage();
 }
 ?>
+
+//criar email funcção para enviara email com senha nova
+//enviar email com senha nova
