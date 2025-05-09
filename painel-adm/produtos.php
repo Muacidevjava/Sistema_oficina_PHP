@@ -162,7 +162,7 @@ require_once("../conexao.php");
                                 <div class="input-group">
                                     <select name="categoria" class="form-control" id="categoria">
                                         <?php
-                                        $query = $pdo->query("SELECT * FROM categorias order by nome asc ");
+                                        $query = $pdo->query("SELECT * FROM categorias order by nome desc ");
                                         $res = $query->fetchAll(PDO::FETCH_ASSOC);
 
                                         for ($i = 0; $i < count($res); $i++) {
@@ -174,11 +174,11 @@ require_once("../conexao.php");
                                             <option <?php if (@$categoria2 == @$id_cat) { echo 'selected'; } ?> value="<?php echo $id_cat ?>"><?php echo $nome_cat ?></option>
                                         <?php } ?>
                                     </select>
-                                    <div class="input-group-append">
+                                    <!-- <div class="input-group-append">
                                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalCategoria">
                                             <i class="fas fa-plus"></i>
                                         </button>
-                                    </div>
+                                    </div> -->
                                 </div>
                             </div>
                         </div>
@@ -188,7 +188,7 @@ require_once("../conexao.php");
                                 <div class="input-group">
                                     <select name="fornecedor" class="form-control" id="fornecedor">
                                         <?php
-                                        $query = $pdo->query("SELECT * FROM fornecedores order by nome asc ");
+                                        $query = $pdo->query("SELECT * FROM fornecedores order by nome desc ");
                                         $res = $query->fetchAll(PDO::FETCH_ASSOC);
 
                                         for ($i = 0; $i < count($res); $i++) {
@@ -200,11 +200,11 @@ require_once("../conexao.php");
                                             <option <?php if (@$fornecedor2 == @$id_forn) { echo 'selected'; } ?> value="<?php echo $id_forn ?>"><?php echo $nome_forn ?></option>
                                         <?php } ?>
                                     </select>
-                                    <div class="input-group-append">
+                                    <!-- <div class="input-group-append">
                                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalFornecedor">
-                                            <i class="fas fa-plus"></i>
+                                            <i class="fas fa-plus"><a href="../painel-adm/fornecedores.php"></a></i>
                                         </button>
-                                    </div>
+                                    </div> -->
                                 </div>
                             </div>
                         </div>
@@ -222,7 +222,7 @@ require_once("../conexao.php");
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label>Porcentagem de Lucro</label>
-                                <input type="number" class="form-control" id="porcentagem" name="porcentagem" placeholder="%" value="0" onchange="calcularVenda()">
+                                <input type="number" class="form-control" id="porcentagem" name="porcentagem" placeholder="%" value="" onchange="calcularVenda()">
                             </div>
                         </div>
                         <div class="col-md-4">
