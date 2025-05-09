@@ -3,22 +3,17 @@ require_once("../../conexao.php");
 
 $id = $_POST['id'];
 
-// Buscar o CPF do mecânico antes de excluir
-$query = $pdo->prepare("SELECT cpf FROM mecanicos WHERE id = :id");
-$query->bindValue(":id", $id);
-$query->execute();
+//BUSCAR A IMAGEM PARA EXCLUIR DA PASTA
+$query = $pdo->query("SELECT * FROM produtos where id = '$id'");
 $res = $query->fetchAll(PDO::FETCH_ASSOC);
-$cpf = $res[0]['cpf'];
+$imagem = $res[0]['imagem'];
 
-// Excluir da tabela mecanicos
-$res = $pdo->prepare("DELETE FROM mecanicos WHERE id = :id");
-$res->bindValue(":id", $id);
-$res->execute();
+if($imagem != 'sem-foto.jpg'){
+    unlink('../../img/produtos/'.$imagem);
+}
 
-// Excluir também da tabela usuarios
-$res = $pdo->prepare("DELETE FROM usuarios WHERE cpf = :cpf");
-$res->bindValue(":cpf", $cpf);
-$res->execute();
+$query = $pdo->query("DELETE FROM produtos where id = '$id'");
 
-echo "Excluído com Sucesso!";
+echo 'Excluído com Sucesso!';
 ?>
+

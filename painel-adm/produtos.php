@@ -45,7 +45,9 @@ require_once("../conexao.php");
 
                     <?php
 
-                    $query = $pdo->query("SELECT * FROM produtos order by id desc ");
+                    $query = $pdo->query("SELECT p.*, f.nome as nome_fornecedor FROM produtos p 
+                                        LEFT JOIN fornecedores f ON p.fornecedor = f.id 
+                                        ORDER BY p.id DESC");
                     $res = $query->fetchAll(PDO::FETCH_ASSOC);
 
                     for ($i = 0; $i < count($res); $i++) {
@@ -54,7 +56,7 @@ require_once("../conexao.php");
 
                         $nome = $res[$i]['nome'];
                         $categoria = $res[$i]['categoria'];
-                        $fornecedor = $res[$i]['fornecedor'];
+                        $fornecedor = $res[$i]['nome_fornecedor'];  // Agora pegamos o nome do fornecedor
                         $valor_compra = $res[$i]['valor_compra'];
                         $valor_venda = $res[$i]['valor_venda'];
                         $estoque = $res[$i]['estoque'];
@@ -78,8 +80,14 @@ require_once("../conexao.php");
                             <td><?php echo $valor_venda ?></td>
                             <td><?php echo $estoque ?></td>
                             <td><?php echo $descricao ?></td>
-                            <td><img src="<?php echo $imagem ?>" width="50"></td>
-                            <td><?php echo $data_cadastro ?></td>
+                            <td>
+                                <?php if($imagem != "") { ?>
+                                    <img src="../img/produtos/<?php echo $imagem ?>" width="50" height="50">
+                                <?php } else { ?>
+                                    <img src="../img/produtos/sem-foto.jpg" width="50" height="50">
+                                <?php } ?>
+                            </td>
+                            <td><?php echo date('d/m/Y H:i', strtotime($data_cadastro)) ?></td>
 
 
 
@@ -138,52 +146,66 @@ require_once("../conexao.php");
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="form" method="POST">
+            <form id="form" method="POST" enctype="multipart/form-data">
                 <div class="modal-body">
 
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label>Nome</label>
-                                <input value="<?php echo @$nome2 ?>" type="text" class="form-control" id="nome_mec" name="nome_mec" placeholder="Nome">
+                                <input value="<?php echo @$nome2 ?>" type="text" class="form-control" id="nome" name="nome" placeholder="Nome">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label>Categoria</label>
-                                <select name="categoria" class="form-control" id="categoria">
-                                    <?php
-                                    $query = $pdo->query("SELECT * FROM categorias order by nome asc ");
-                                    $res = $query->fetchAll(PDO::FETCH_ASSOC);
+                                <div class="input-group">
+                                    <select name="categoria" class="form-control" id="categoria">
+                                        <?php
+                                        $query = $pdo->query("SELECT * FROM categorias order by nome asc ");
+                                        $res = $query->fetchAll(PDO::FETCH_ASSOC);
 
-                                    for ($i = 0; $i < count($res); $i++) {
-                                        foreach ($res[$i] as $key => $value) {
-                                        }
-                                        $nome_cat = $res[$i]['nome'];
-                                        $id_cat = $res[$i]['id'];
-                                    ?>
-                                        <option <?php if (@$categoria2 == @$id_cat) { echo 'selected'; } ?> value="<?php echo $id_cat ?>"><?php echo $nome_cat ?></option>
-                                    <?php } ?>
-                                </select>
+                                        for ($i = 0; $i < count($res); $i++) {
+                                            foreach ($res[$i] as $key => $value) {
+                                            }
+                                            $nome_cat = $res[$i]['nome'];
+                                            $id_cat = $res[$i]['id'];
+                                        ?>
+                                            <option <?php if (@$categoria2 == @$id_cat) { echo 'selected'; } ?> value="<?php echo $id_cat ?>"><?php echo $nome_cat ?></option>
+                                        <?php } ?>
+                                    </select>
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalCategoria">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label>Fornecedor</label>
-                                <select name="fornecedor" class="form-control" id="fornecedor">
-                                    <?php
-                                    $query = $pdo->query("SELECT * FROM fornecedores order by nome asc ");
-                                    $res = $query->fetchAll(PDO::FETCH_ASSOC);
+                                <div class="input-group">
+                                    <select name="fornecedor" class="form-control" id="fornecedor">
+                                        <?php
+                                        $query = $pdo->query("SELECT * FROM fornecedores order by nome asc ");
+                                        $res = $query->fetchAll(PDO::FETCH_ASSOC);
 
-                                    for ($i = 0; $i < count($res); $i++) {
-                                        foreach ($res[$i] as $key => $value) {
-                                        }
-                                        $nome_forn = $res[$i]['nome'];
-                                        $id_forn = $res[$i]['id'];
-                                    ?>
-                                        <option <?php if (@$fornecedor2 == @$id_forn) { echo 'selected'; } ?> value="<?php echo $id_forn ?>"><?php echo $nome_forn ?></option>
-                                    <?php } ?>
-                                </select>
+                                        for ($i = 0; $i < count($res); $i++) {
+                                            foreach ($res[$i] as $key => $value) {
+                                            }
+                                            $nome_forn = $res[$i]['nome'];
+                                            $id_forn = $res[$i]['id'];
+                                        ?>
+                                            <option <?php if (@$fornecedor2 == @$id_forn) { echo 'selected'; } ?> value="<?php echo $id_forn ?>"><?php echo $nome_forn ?></option>
+                                        <?php } ?>
+                                    </select>
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalFornecedor">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -194,7 +216,13 @@ require_once("../conexao.php");
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label>Valor da Compra</label>
-                                <input value="<?php echo @$valor_compra2 ?>" type="text" class="form-control" id="valor_compra" name="valor_compra" placeholder="Valor da Compra">
+                                <input value="<?php echo @$valor_compra2 ?>" type="text" class="form-control" id="valor_compra" name="valor_compra" placeholder="Valor da Compra" onchange="calcularVenda()">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Porcentagem de Lucro</label>
+                                <input type="number" class="form-control" id="porcentagem" name="porcentagem" placeholder="%" value="0" onchange="calcularVenda()">
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -251,17 +279,11 @@ require_once("../conexao.php");
 
                 </div>
 
-
-
                 <div class="modal-footer">
-
-
-
                     <input value="<?php echo @$_GET['id'] ?>" type="hidden" name="txtid2" id="txtid2">
-                    <input value="<?php echo @$cpf2 ?>" type="hidden" name="antigo" id="antigo">
-                    <input value="<?php echo @$email2 ?>" type="hidden" name="antigo2" id="antigo2">
+                    <input value="<?php echo @$nome2 ?>" type="hidden" name="antigo" id="antigo">
 
-                    <button type="button" id="btn-fechar" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" id="btn-fechar" class="btn btn-secondary mr-2" data-dismiss="modal">Cancelar</button>
                     <button type="submit" name="btn-salvar" id="btn-salvar" class="btn btn-primary">Salvar</button>
                 </div>
             </form>
@@ -327,7 +349,6 @@ if (@$_GET["funcao"] != null && @$_GET["funcao"] == "excluir") {
 
 
 
-
 <!--AJAX PARA INSERÇÃO E EDIÇÃO DOS DADOS COM IMAGEM -->
 <script type="text/javascript">
     $("#form").submit(function() {
@@ -341,33 +362,33 @@ if (@$_GET["funcao"] != null && @$_GET["funcao"] == "excluir") {
             data: formData,
 
             success: function(mensagem) {
-
                 $('#mensagem').removeClass()
 
                 if (mensagem.trim() == "Salvo com Sucesso!!") {
+                    $('#btn-salvar').prop('disabled', true);
                     $('#mensagem').addClass('text-success')
                     $('#mensagem').text(mensagem)
+                    
+                    // Habilita interação com o resto da página
+                    $('.modal').css('pointer-events', 'auto');
+                    
                     setTimeout(function() {
                         $('#btn-fechar').click();
                         window.location = "index.php?pag=" + pag;
-                    }, 2000); // 2 segundos de atraso
+                    }, 2000);
                 } else {
                     $('#mensagem').addClass('text-danger')
                     $('#mensagem').text(mensagem)
                 }
-
-                $('#mensagem').text(mensagem)
-
             },
 
             cache: false,
             contentType: false,
             processData: false,
-            xhr: function() { // Custom XMLHttpRequest
+            xhr: function() {
                 var myXhr = $.ajaxSettings.xhr();
-                if (myXhr.upload) { // Avalia se tem suporte a propriedade upload
+                if (myXhr.upload) {
                     myXhr.upload.addEventListener('progress', function() {
-                        /* faz alguma coisa durante o progresso do upload */
                     }, false);
                 }
                 return myXhr;
@@ -415,21 +436,18 @@ if (@$_GET["funcao"] != null && @$_GET["funcao"] == "excluir") {
 <!--SCRIPT PARA CARREGAR IMAGEM -->
 <script type="text/javascript">
     function carregarImg() {
-
         var target = document.getElementById('target');
         var file = document.querySelector("input[type=file]").files[0];
         var reader = new FileReader();
 
-        reader.onloadend = function() {
+        reader.onloadend = function () {
             target.src = reader.result;
         };
 
         if (file) {
             reader.readAsDataURL(file);
-
-
         } else {
-            target.src = "";
+            target.src = "../img/produtos/sem-foto.jpg";
         }
     }
 </script>
@@ -438,11 +456,147 @@ if (@$_GET["funcao"] != null && @$_GET["funcao"] == "excluir") {
 
 
 
+<!-- Adicione este script antes do fechamento do body -->
+<script type="text/javascript">
+    function calcularVenda() {
+        var valor_compra = document.getElementById('valor_compra').value;
+        var porcentagem = document.getElementById('porcentagem').value;
+        
+        // Remove formatação do valor de compra
+        valor_compra = valor_compra.replace('.', '').replace(',', '.');
+        
+        if(valor_compra != "" && porcentagem != "") {
+            var valor_compra_float = parseFloat(valor_compra);
+            var porcentagem_float = parseFloat(porcentagem);
+            
+            var valor_venda = valor_compra_float + (valor_compra_float * (porcentagem_float/100));
+            
+            // Formata o valor de venda
+            document.getElementById('valor_venda').value = valor_venda.toFixed(2).replace('.', ',');
+            $('#valor_venda').mask('#.##0,00', {reverse: true});
+        }
+    }
+</script>
+
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#valor_compra').mask('#.##0,00', {reverse: true});
+        $('#valor_venda').mask('#.##0,00', {reverse: true});
+    });
+</script>
+
 <script type="text/javascript">
     $(document).ready(function() {
         $('#dataTable').dataTable({
             "ordering": true
         })
 
+    });
+</script>
+
+
+<!-- Modal Categoria -->
+<div class="modal fade" id="modalCategoria" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Nova Categoria</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="form-categoria">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Nome da Categoria</label>
+                        <input type="text" class="form-control" id="categoria-nome" name="nome" required>
+                    </div>
+                    <div id="mensagem-categoria"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Fornecedor -->
+<div class="modal fade" id="modalFornecedor" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Novo Fornecedor</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="form-fornecedor">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Nome do Fornecedor</label>
+                        <input type="text" class="form-control" id="fornecedor-nome" name="nome" required>
+                    </div>
+                    <div id="mensagem-fornecedor"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Script para Categoria e Fornecedor -->
+<script type="text/javascript">
+    $("#form-categoria").submit(function(e) {
+        e.preventDefault();
+        $.ajax({
+            url: 'categoria/inserir.php',
+            method: 'POST',
+            data: $(this).serialize(),
+            success: function(mensagem) {
+                if(mensagem.trim() === "Salvo com Sucesso!!") {
+                    $('#categoria-nome').val('');
+                    $('#mensagem-categoria').addClass('text-success').text(mensagem);
+                    setTimeout(function() {
+                        $('#modalCategoria').modal('hide');
+                        // Atualiza o select de categorias
+                        $.get("categoria/listar.php", function(data) {
+                            $("#categoria").html(data);
+                        });
+                    }, 2000);
+                } else {
+                    $('#mensagem-categoria').addClass('text-danger').text(mensagem);
+                }
+            }
+        });
+    });
+
+    $("#form-fornecedor").submit(function(e) {
+        e.preventDefault();
+        $.ajax({
+            url: 'fornecedores/inserir.php',
+            method: 'POST',
+            data: $(this).serialize(),
+            success: function(mensagem) {
+                if(mensagem.trim() === "Salvo com Sucesso!!") {
+                    $('#fornecedor-nome').val('');
+                    $('#mensagem-fornecedor').addClass('text-success').text(mensagem);
+                    setTimeout(function() {
+                        $('#modalFornecedor').modal('hide');
+                        // Atualiza o select de fornecedores
+                        $.get("fornecedores/listar.php", function(data) {
+                            $("#fornecedor").html(data);
+                        });
+                    }, 2000);
+                } else {
+                    $('#mensagem-fornecedor').addClass('text-danger').text(mensagem);
+                }
+            }
+        });
     });
 </script>
