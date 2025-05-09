@@ -19,6 +19,19 @@ $caminho = '../../img/produtos/' . $nome_img;
 if (@$_FILES['imagem']['name'] == ""){
   $imagem = "sem-foto.jpg";
 }else{
+  // Validação do tipo de arquivo
+  $permitidos = array('image/jpeg', 'image/jpg', 'image/png', 'image/gif');
+  if (!in_array($_FILES['imagem']['type'], $permitidos)) {
+    echo 'Tipo de arquivo não permitido! Selecione apenas imagens (JPG, PNG ou GIF)';
+    exit();
+  }
+  
+  // Validação do tamanho do arquivo (máximo 2MB)
+  if ($_FILES['imagem']['size'] > 2 * 1024 * 1024) {
+    echo 'Arquivo muito grande! Tamanho máximo permitido: 2MB';
+    exit();
+  }
+  
   $imagem = $nome_img;
 }
 

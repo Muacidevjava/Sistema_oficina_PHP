@@ -250,7 +250,7 @@ require_once("../conexao.php");
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label>Imagem</label>
-                                <input type="file" value="<?php echo @$imagem2 ?>" class="form-control-file" id="imagem" name="imagem" onChange="carregarImg()">
+                                <input type="file" value="<?php echo @$imagem2 ?>" class="form-control-file" id="imagem" name="imagem" onChange="carregarImg()" accept="image/jpeg,image/jpg,image/png,image/gif">
                             </div>
 
                             <div id="divImg">
