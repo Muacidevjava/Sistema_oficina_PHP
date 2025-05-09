@@ -191,30 +191,52 @@ require_once("../conexao.php");
 
 
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-group">
-                                <label>CPF</label>
-                                <input value="<?php echo @$cpf2 ?>" type="text" class="form-control" id="cpf" name="cpf_mec" placeholder="CPF">
+                                <label>Valor da Compra</label>
+                                <input value="<?php echo @$valor_compra2 ?>" type="text" class="form-control" id="valor_compra" name="valor_compra" placeholder="Valor da Compra">
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-group">
-                                <label>Telefone</label>
-                                <input value="<?php echo @$telefone2 ?>" type="text" class="form-control" id="telefone" name="telefone_mec" placeholder="Telefone">
+                                <label>Valor da Venda</label>
+                                <input value="<?php echo @$valor_venda2 ?>" type="text" class="form-control" id="valor_venda" name="valor_venda" placeholder="Valor da Venda">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Estoque</label>
+                                <input value="<?php echo @$estoque2 ?>" type="number" class="form-control" id="estoque" name="estoque" placeholder="Estoque">
                             </div>
                         </div>
                     </div>
 
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label>Descrição</label>
+                                <textarea maxlength="255" class="form-control" name="descricao" id="descricao"><?php echo @$descricao2 ?></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Imagem</label>
+                                <input type="file" value="<?php echo @$imagem2 ?>" class="form-control-file" id="imagem" name="imagem" onChange="carregarImg()">
+                            </div>
+
+                            <div id="divImg">
+                                <?php if(@$imagem2 != "") { ?>
+                                    <img src="../img/produtos/<?php echo $imagem2 ?>" width="100" height="100" id="target">
+                                <?php } else { ?>
+                                    <img src="../img/produtos/sem-foto2.jpg" width="100" height="100" id="target">
+                                <?php } ?>
+                            </div>
+                        </div>
+                        
+                    </div>
 
 
-                    <div class="form-group">
-                        <label>Endereço</label>
-                        <input value="<?php echo @$endereco2 ?>" type="text" class="form-control" id="endereco" name="endereco_mec" placeholder="Endereço">
-                    </div>
-                    <div class="form-group">
-                        <label>Email</label>
-                        <input value="<?php echo @$email2 ?>" type="text" class="form-control" id="email" name="email_mec" placeholder="email">
-                    </div>
+
 
 
 
