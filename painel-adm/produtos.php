@@ -28,6 +28,7 @@ require_once("../conexao.php");
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
                     <tr>
+                        <th>Código</th>
                         <th>Nome</th>
                         <th>Categoria</th>
                         <th>Fornecedor</th>
@@ -56,7 +57,7 @@ require_once("../conexao.php");
 
                         $nome = $res[$i]['nome'];
                         $categoria = $res[$i]['categoria'];
-                        $fornecedor = $res[$i]['nome_fornecedor'];  // Agora pegamos o nome do fornecedor
+                        $fornecedor = $res[$i]['nome_fornecedor'];
                         $valor_compra = $res[$i]['valor_compra'];
                         $valor_venda = $res[$i]['valor_venda'];
                         $estoque = $res[$i]['estoque'];
@@ -65,14 +66,9 @@ require_once("../conexao.php");
                         $data_cadastro = $res[$i]['data_cadastro'];
                         $id = $res[$i]['id'];
 
-
-
-
-
-                    ?>
-
-
+                        ?>
                         <tr>
+                            <td><?php echo $id ?></td>
                             <td><?php echo $nome ?></td>
                             <td><?php echo $categoria ?></td>
                             <td><?php echo $fornecedor ?></td>
@@ -125,15 +121,15 @@ require_once("../conexao.php");
                     $query = $pdo->query("SELECT * FROM produtos where id = '" . $id2 . "' ");
                     $res = $query->fetchAll(PDO::FETCH_ASSOC);
 
-                    $nome2 = $res[$i]['nome'];
-                    $categoria2 = $res[$i]['categoria'];
-                    $fornecedor2 = $res[$i]['fornecedor'];
-                    $valor_compra2 = $res[$i]['valor_compra'];
-                    $valor_venda2 = $res[$i]['valor_venda'];
-                    $estoque2 = $res[$i]['estoque'];
-                    $descricao2 = $res[$i]['descricao'];
-                    $imagem2 = $res[$i]['imagem'];
-                    $data_cadastro2 = $res[$i]['data_cadastro'];
+                    $nome2 = $res[0]['nome'];
+                    $categoria2 = $res[0]['categoria'];
+                    $fornecedor2 = $res[0]['fornecedor'];
+                    $valor_compra2 = $res[0]['valor_compra'];
+                    $valor_venda2 = $res[0]['valor_venda'];
+                    $estoque2 = $res[0]['estoque'];
+                    $descricao2 = $res[0]['descricao'];
+                    $imagem2 = $res[0]['imagem'];
+                    $data_cadastro2 = $res[0]['data_cadastro'];
                 } else {
                     $titulo = "Inserir Registro";
                 }
@@ -148,8 +144,13 @@ require_once("../conexao.php");
             </div>
             <form id="form" method="POST" enctype="multipart/form-data">
                 <div class="modal-body">
-
                     <div class="row">
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label>Código</label>
+                                <input value="<?php echo @$id2 ?>" type="text" class="form-control" id="id" name="id" readonly>
+                            </div>
+                        </div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label>Nome</label>
