@@ -72,8 +72,8 @@ require_once("../conexao.php");
                             <td><?php echo $nome ?></td>
                             <td><?php echo $categoria ?></td>
                             <td><?php echo $fornecedor ?></td>
-                            <td><?php echo $valor_compra ?></td>
-                            <td><?php echo $valor_venda ?></td>
+                            <td><?php echo 'R$ ' . number_format($valor_compra, 2, ',', '.') ?></td>
+                            <td><?php echo 'R$ ' . number_format($valor_venda, 2, ',', '.') ?></td>
                             <td><?php echo $estoque ?></td>
                             <td><?php echo $descricao ?></td>
                             <td>
@@ -257,7 +257,7 @@ require_once("../conexao.php");
                                 <?php if(@$imagem2 != "") { ?>
                                     <img src="../img/produtos/<?php echo $imagem2 ?>" width="100" height="100" id="target">
                                 <?php } else { ?>
-                                    <img src="../img/produtos/sem-foto2.jpg" width="100" height="100" id="target">
+                                    <img src="../img/produtos/sem-foto.jpg" width="100" height="100" id="target">
                                 <?php } ?>
                             </div>
                         </div>
@@ -482,8 +482,8 @@ if (@$_GET["funcao"] != null && @$_GET["funcao"] == "excluir") {
 
 <script type="text/javascript">
     $(document).ready(function() {
-        $('#valor_compra').mask('#.##0,00', {reverse: true});
-        $('#valor_venda').mask('#.##0,00', {reverse: true});
+        $('#valor_compra').mask('R$ #.##0,00', {reverse: true});
+        $('#valor_venda').mask('R$ #.##0,00', {reverse: true});
     });
 </script>
 

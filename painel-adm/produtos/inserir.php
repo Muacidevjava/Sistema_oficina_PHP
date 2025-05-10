@@ -4,8 +4,22 @@ require_once("../../conexao.php");
 $nome = $_POST['nome'];
 $categoria = $_POST['categoria'];
 $fornecedor = $_POST['fornecedor'];
-$valor_compra = str_replace(',', '.', $_POST['valor_compra']);
-$valor_venda = str_replace(',', '.', $_POST['valor_venda']);
+
+// Corrige formatação dos valores monetários para o padrão brasileiro
+$valor_compra = $_POST['valor_compra'];
+$valor_venda = $_POST['valor_venda'];
+
+// Remove o R$ e espaços se houver
+$valor_compra = str_replace('R$ ', '', $valor_compra);
+$valor_venda = str_replace('R$ ', '', $valor_venda);
+
+// Remove todos os pontos e substitui vírgula por ponto
+$valor_compra = str_replace('.', '', $valor_compra);
+$valor_compra = str_replace(',', '.', $valor_compra);
+
+$valor_venda = str_replace('.', '', $valor_venda);
+$valor_venda = str_replace(',', '.', $valor_venda);
+
 $estoque = $_POST['estoque'];
 $descricao = $_POST['descricao'];
 
