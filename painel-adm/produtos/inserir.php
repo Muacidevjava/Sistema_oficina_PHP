@@ -78,7 +78,7 @@ if($antigo != $nome){
 
 try {
     if($id == ""){
-        $res = $pdo->prepare("INSERT INTO produtos (nome, categoria, fornecedor, valor_compra, valor_venda, estoque, descricao, imagem, data_cadastro) VALUES (:nome, :categoria, :fornecedor, :valor_compra, :valor_venda, :estoque, :descricao, :imagem, curDate())");
+        $res = $pdo->prepare("INSERT INTO produtos (nome, categoria, fornecedor, valor_compra, valor_venda, estoque, descricao, imagem, data_cadastro) VALUES (:nome, :categoria, :fornecedor, :valor_compra, :valor_venda, :estoque, :descricao, :imagem, NOW())");
         $res->bindValue(":imagem", $imagem);
     } else {
         if($imagem == "sem-foto.jpg" && @$_FILES['imagem']['name'] == ""){

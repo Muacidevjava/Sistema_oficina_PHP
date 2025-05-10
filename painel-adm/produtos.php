@@ -83,7 +83,7 @@ require_once("../conexao.php");
                                     <img src="../img/produtos/sem-foto.jpg" width="50" height="50">
                                 <?php } ?>
                             </td>
-                            <td><?php echo date('d/m/Y H:i', strtotime($data_cadastro)) ?></td>
+                            <td><?php echo date('d/m/Y H:i:s', strtotime($data_cadastro)) ?></td>
 
 
 
