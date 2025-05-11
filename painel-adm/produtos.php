@@ -46,8 +46,10 @@ require_once("../conexao.php");
 
                     <?php
 
-                    $query = $pdo->query("SELECT p.*, f.nome as nome_fornecedor FROM produtos p 
+                    $query = $pdo->query("SELECT p.*, f.nome as nome_fornecedor, c.nome as nome_categoria 
+                                        FROM produtos p 
                                         LEFT JOIN fornecedores f ON p.fornecedor = f.id 
+                                        LEFT JOIN categorias c ON p.categoria = c.id
                                         ORDER BY p.id DESC");
                     $res = $query->fetchAll(PDO::FETCH_ASSOC);
 
@@ -56,7 +58,7 @@ require_once("../conexao.php");
                         }
 
                         $nome = $res[$i]['nome'];
-                        $categoria = $res[$i]['categoria'];
+                        $categoria = $res[$i]['nome_categoria'];
                         $fornecedor = $res[$i]['nome_fornecedor'];
                         $valor_compra = $res[$i]['valor_compra'];
                         $valor_venda = $res[$i]['valor_venda'];
