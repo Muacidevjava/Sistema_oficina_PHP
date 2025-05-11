@@ -303,7 +303,7 @@ require_once("../conexao.php");
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Descrição do Produto</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Detalhes do Produto</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -315,9 +315,21 @@ require_once("../conexao.php");
                     $query = $pdo->query("SELECT * FROM produtos where id = '$id2'");
                     $res = $query->fetchAll(PDO::FETCH_ASSOC);
                     $descricao2 = $res[0]['descricao'];
-                    echo $descricao2;
-                }
-                ?>
+                    $imagem2 = $res[0]['imagem'];
+                    ?>
+                    
+                    <div class="text-center mb-3">
+                        <?php if($imagem2 != "") { ?>
+                            <img src="../img/produtos/<?php echo $imagem2 ?>" width="200" height="200" class="img-fluid">
+                        <?php } else { ?>
+                            <img src="../img/produtos/sem-foto.jpg" width="200" height="200" class="img-fluid">
+                        <?php } ?>
+                    </div>
+                    
+                    <p><strong>Descrição:</strong></p>
+                    <p><?php echo $descricao2 ?></p>
+                    
+                <?php } ?>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
