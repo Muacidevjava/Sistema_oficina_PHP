@@ -245,7 +245,7 @@ require_once("../conexao.php");
                         <div class="col-md-8">
                             <div class="form-group">
                                 <label>Descrição</label>
-                                <textarea maxlength="255" class="form-control" name="descricao" id="descricao"><?php echo @$descricao2 ?></textarea>
+                                <textarea maxlength="1000" class="form-control" name="descricao" id="descricao"><?php echo @$descricao2 ?></textarea>
                             </div>
                         </div>
                         <div class="col-md-4">
