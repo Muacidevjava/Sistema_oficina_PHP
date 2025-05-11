@@ -170,18 +170,31 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != 'Admin'){
                         <div class="col-md-6" id="divcnpj">
                             <div class="form-group">
                                 <label>CNPJ</label>
-                                <input value="<?php echo isset($tipo_pessoa2) && $tipo_pessoa2 == 'Jurídica' ? @$cpf2 : ''; ?>" 
-                                       type="text" 
-                                       class="form-control" 
-                                       id="cnpj" 
-                                       name="cnpj_mec" 
-                                       placeholder="CNPJ">
+                                <div class="input-group">
+                                    <input value="<?php echo isset($tipo_pessoa2) && $tipo_pessoa2 == 'Jurídica' ? @$cpf2 : ''; ?>" 
+                                           type="text" 
+                                           class="form-control" 
+                                           id="cnpj" 
+                                           name="cnpj_mec" 
+                                           placeholder="CNPJ">
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn btn-info" onclick="consultarCNPJ()">
+                                            <i class="fas fa-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>Telefone</label>
-                                <input value="<?php echo @$telefone2 ?>" type="text" class="form-control" id="telefone" name="telefone_mec" placeholder="Telefone">
+                                <input value="<?php echo @$telefone2 ?>" 
+                                       type="text" 
+                                       class="form-control" 
+                                       id="telefone" 
+                                       name="telefone_mec" 
+                                       placeholder="(00) 00000-0000" 
+                                       maxlength="15">
                             </div>
                         </div>
                     </div>
@@ -433,3 +446,48 @@ if (@$_GET["funcao"] != null && @$_GET["funcao"] == "excluir") {
         });
     });
 </script>
+
+<!-- Adicione este script antes do fechamento do body -->
+<script type="text/javascript">
+function consultarCNPJ() {
+    var cnpj = $('#cnpj').val().replace(/[^0-9]/g, '');
+    
+    if(cnpj.length != 14){
+        alert('CNPJ inválido');
+        return;
+    }
+
+    $.ajax({
+        url: 'https://www.receitaws.com.br/v1/cnpj/' + cnpj,
+        method: 'GET',
+        dataType: 'jsonp',
+        success: function(data) {
+            if(data.status == 'OK') {
+                $('#nome_mec').val(data.nome);
+                $('#endereco').val(data.logradouro + ', ' + data.numero + ' - ' + data.bairro + ' - ' + data.municipio + '/' + data.uf);
+                $('#telefone').val(data.telefone);
+                $('#email').val(data.email);
+            } else {
+                alert('CNPJ não encontrado ou erro na consulta');
+            }
+        },
+        error: function() {
+            alert('Erro ao consultar o CNPJ. Tente novamente mais tarde.');
+        }
+    });
+}
+
+// Adiciona máscara ao campo CNPJ
+$(document).ready(function(){
+    $('#cnpj').mask('00.000.000/0000-00');
+    $('#cpf').mask('000.000.000-00');
+    $('#telefone').mask('(00) 00000-0000', {
+        onKeyPress: function(phone, e, field, options) {
+            var masks = ['(00) 00000-0000', '(00) 0000-00009'];
+            var mask = (phone.length > 14) ? masks[0] : masks[1];
+            $('#telefone').mask(mask, options);
+        }
+    });
+});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
