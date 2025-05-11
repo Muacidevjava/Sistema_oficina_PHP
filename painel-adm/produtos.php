@@ -32,7 +32,7 @@ require_once("../conexao.php");
                         <th>Nome</th>
                         <th>Categoria</th>
                         <th>Fornecedor</th>
-                        <th>Valor de Compra</th>
+                        <th>Valor da Compra</th>
                         <th>Valor de venda</th>
                         <th>Estoque</th>
                         <th>Imagem</th>
@@ -91,6 +91,7 @@ require_once("../conexao.php");
                                 <a href="index.php?pag=<?php echo $pag ?>&funcao=editar&id=<?php echo $id ?>" class='text-primary mr-1' title='Editar Dados'><i class='far fa-edit'></i></a>
                                 <a href="index.php?pag=<?php echo $pag ?>&funcao=excluir&id=<?php echo $id ?>" class='text-danger mr-1' title='Excluir Registro'><i class='far fa-trash-alt'></i></a>
                                 <a href="index.php?pag=<?php echo $pag ?>&funcao=info&id=<?php echo $id ?>" class='text-primary mr-1' title='Descrição do Produto'><i class='fas fa-info-circle'></i></a>
+                                <a href="index.php?pag=<?php echo $pag ?>&funcao=similares&id=<?php echo $id ?>&categoria=<?php echo $res[$i]['categoria'] ?>" class='text-warning mr-1' title='Produtos Similares'><i class='fas fa-layer-group'></i></a>
                             </td>
                         </tr>
                     <?php } ?>
@@ -613,3 +614,76 @@ if (@$_GET["funcao"] != null && @$_GET["funcao"] == "excluir") {
         });
     });
 </script>
+
+
+<!-- Adicione este novo modal antes do fechamento do arquivo -->
+<!-- Modal Similares -->
+<div class="modal fade" id="modalSimilares" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Produtos da Mesma Categoria</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <?php 
+                if(@$_GET['funcao'] == 'similares'){
+                    $id_prod = $_GET['id'];
+                    $id_cat = $_GET['categoria'];
+                    
+                    $query = $pdo->query("SELECT p.*, c.nome as nome_categoria 
+                                        FROM produtos p 
+                                        LEFT JOIN categorias c ON p.categoria = c.id 
+                                        WHERE p.categoria = '$id_cat' AND p.id != '$id_prod'");
+                    $res = $query->fetchAll(PDO::FETCH_ASSOC);
+                    
+                    if(count($res) > 0){
+                        $nome_categoria = $res[0]['nome_categoria'];
+                        echo '<h6 class="mb-3">Categoria: '.$nome_categoria.'</h6>';
+                        echo '<div class="row">';
+                        
+                        foreach($res as $produto){
+                            ?>
+                            <div class="col-md-4 mb-4">
+                                <div class="card">
+                                    <div class="text-center mt-2">
+                                        <?php if($produto['imagem'] != "") { ?>
+                                            <img src="../img/produtos/<?php echo $produto['imagem'] ?>" width="150" height="150" class="card-img-top">
+                                        <?php } else { ?>
+                                            <img src="../img/produtos/sem-foto.jpg" width="150" height="150" class="card-img-top">
+                                        <?php } ?>
+                                    </div>
+                                    <div class="card-body">
+                                        <h6 class="card-title"><?php echo $produto['nome'] ?></h6>
+                                        <p class="card-text">
+                                            <strong>Valor:</strong> R$ <?php echo number_format($produto['valor_venda'], 2, ',', '.') ?><br>
+                                            <strong>Estoque:</strong> <?php echo $produto['estoque'] ?>
+                                        </p>
+                                        <a href="index.php?pag=<?php echo $pag ?>&funcao=info&id=<?php echo $produto['id'] ?>" class="btn btn-info btn-sm">Ver Detalhes</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <?php
+                        }
+                        
+                        echo '</div>';
+                    } else {
+                        echo '<p class="text-muted">Não há outros produtos nesta categoria.</p>';
+                    }
+                }
+                ?>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php
+if (@$_GET["funcao"] != null && @$_GET["funcao"] == "similares") {
+    echo "<script>$('#modalSimilares').modal('show');</script>";
+}
+?>
