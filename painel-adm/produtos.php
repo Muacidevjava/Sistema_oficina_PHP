@@ -35,7 +35,6 @@ require_once("../conexao.php");
                         <th>Valor de Compra</th>
                         <th>Valor de venda</th>
                         <th>Estoque</th>
-                        <th>Descrição</th>
                         <th>Imagem</th>
                         <th>Data cadastro</th>
                         <th>Ações</th>
@@ -77,7 +76,6 @@ require_once("../conexao.php");
                             <td><?php echo 'R$ ' . number_format($valor_compra, 2, ',', '.') ?></td>
                             <td><?php echo 'R$ ' . number_format($valor_venda, 2, ',', '.') ?></td>
                             <td><?php echo $estoque ?></td>
-                            <td><?php echo $descricao ?></td>
                             <td>
                                 <?php if($imagem != "") { ?>
                                     <img src="../img/produtos/<?php echo $imagem ?>" width="50" height="50">
@@ -92,6 +90,7 @@ require_once("../conexao.php");
                             <td>
                                 <a href="index.php?pag=<?php echo $pag ?>&funcao=editar&id=<?php echo $id ?>" class='text-primary mr-1' title='Editar Dados'><i class='far fa-edit'></i></a>
                                 <a href="index.php?pag=<?php echo $pag ?>&funcao=excluir&id=<?php echo $id ?>" class='text-danger mr-1' title='Excluir Registro'><i class='far fa-trash-alt'></i></a>
+                                <a href="index.php?pag=<?php echo $pag ?>&funcao=info&id=<?php echo $id ?>" class='text-primary mr-1' title='Descrição do Produto'><i class='fas fa-info-circle'></i></a>
                             </td>
                         </tr>
                     <?php } ?>
@@ -299,40 +298,39 @@ require_once("../conexao.php");
 
 
 
-<div class="modal" id="modal-deletar" tabindex="-1" role="dialog">
+<!-- Modal Info -->
+<div class="modal fade" id="modalInfo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Excluir Registro</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Descrição do Produto</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-
-                <p>Deseja realmente Excluir este Registro?</p>
-
-                <div align="center" id="mensagem_excluir" class="">
-
-                </div>
-
+                <?php 
+                if(@$_GET['funcao'] == 'info'){
+                    $id2 = $_GET['id'];
+                    $query = $pdo->query("SELECT * FROM produtos where id = '$id2'");
+                    $res = $query->fetchAll(PDO::FETCH_ASSOC);
+                    $descricao2 = $res[0]['descricao'];
+                    echo $descricao2;
+                }
+                ?>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="btn-cancelar-excluir">Cancelar</button>
-                <form method="post">
-
-                    <input type="hidden" id="id" name="id" value="<?php echo @$_GET['id'] ?>" required>
-
-                    <button type="button" id="btn-deletar" name="btn-deletar" class="btn btn-danger">Excluir</button>
-                </form>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
             </div>
         </div>
     </div>
 </div>
 
-
-
-
+<?php
+if (@$_GET["funcao"] != null && @$_GET["funcao"] == "info") {
+    echo "<script>$('#modalInfo').modal('show');</script>";
+}
+?>
 
 <?php
 
