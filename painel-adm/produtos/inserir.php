@@ -65,6 +65,14 @@ if($valor_compra == ""){
     exit();
 }
 
+if($estoque == ""){
+    echo 'O estoque é obrigatório!';
+    exit();
+}
+
+// Garante que o estoque seja um número inteiro
+$estoque = intval($estoque);
+
 //VERIFICAR SE O REGISTRO JÁ EXISTE NO BANCO
 if($antigo != $nome){
     $query = $pdo->query("SELECT * FROM produtos where nome = '$nome'");

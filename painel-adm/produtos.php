@@ -237,7 +237,7 @@ require_once("../conexao.php");
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label>Estoque</label>
-                                <input value="<?php echo @$estoque2 ?>" type="number" class="form-control" id="estoque" name="estoque" placeholder="Estoque">
+                                <input value="<?php echo @$estoque2 ?>" type="number" class="form-control" id="estoque" name="estoque" placeholder="Estoque" min="0" required>
                             </div>
                         </div>
                     </div>
