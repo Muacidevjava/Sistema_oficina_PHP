@@ -323,10 +323,16 @@ require_once("../conexao.php");
                 <?php 
                 if(@$_GET['funcao'] == 'info'){
                     $id2 = $_GET['id'];
-                    $query = $pdo->query("SELECT * FROM produtos where id = '$id2'");
+                    $query = $pdo->query("SELECT p.*, f.descricao as descricao_fornecedor, f.nome as nome_fornecedor 
+                                        FROM produtos p 
+                                        LEFT JOIN fornecedores f ON p.fornecedor = f.id 
+                                        WHERE p.id = '$id2'");
                     $res = $query->fetchAll(PDO::FETCH_ASSOC);
-                    $descricao2 = $res[0]['descricao'];
+                    $nome_produto = $res[0]['nome'];
+                    $descricao_produto = $res[0]['descricao'];
                     $imagem2 = $res[0]['imagem'];
+                    $nome_fornecedor = $res[0]['nome_fornecedor'];
+                    $descricao_fornecedor = $res[0]['descricao_fornecedor'];
                     ?>
                     
                     <div class="text-center mb-3">
@@ -336,9 +342,17 @@ require_once("../conexao.php");
                             <img src="../img/produtos/sem-foto.jpg" width="200" height="200" class="img-fluid">
                         <?php } ?>
                     </div>
+
+                    <h6 class="text-primary"><?php echo $nome_produto ?></h6>
                     
-                    <p><strong>Descrição:</strong></p>
-                    <p><?php echo $descricao2 ?></p>
+                    <p><strong>Descrição do Produto:</strong></p>
+                    <p class="text-muted"><?php echo $descricao_produto ?></p>
+                    
+                    <hr>
+                    
+                    <p><strong>Fornecedor:</strong> <?php echo $nome_fornecedor ?></p>
+                    <p><strong>Descrição do Fornecedor:</strong></p>
+                    <p class="text-muted"><?php echo $descricao_fornecedor ?></p>
                     
                 <?php } ?>
             </div>
