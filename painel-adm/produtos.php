@@ -74,7 +74,11 @@ require_once("../conexao.php");
                             <td><?php echo $id ?></td>
                             <td><?php echo $nome ?></td>
                             <td><?php echo $categoria ?></td>
-                            <td><?php echo $fornecedor ?></td>
+                            <td>
+                                <a href="index.php?pag=fornecedores&funcao=info&id=<?php echo $res[$i]['fornecedor'] ?>" class="text-primary">
+                                    <?php echo $fornecedor ?>
+                                </a>
+                            </td>
                             <td><?php echo 'R$ ' . number_format($valor_compra, 2, ',', '.') ?></td>
                             <td><?php echo 'R$ ' . number_format($valor_venda, 2, ',', '.') ?></td>
                             <td><?php echo $estoque ?></td>
