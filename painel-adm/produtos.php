@@ -160,7 +160,14 @@ require_once("../conexao.php");
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label>Referência</label>
-                                <input value="<?php echo @$ref2 ?>" type="text" class="form-control" id="ref" name="ref" placeholder="Referência do produto">
+                                <div class="input-group">
+                                    <input value="<?php echo @$ref2 ?>" type="text" class="form-control" id="ref" name="ref" placeholder="Referência do produto">
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn btn-primary" onclick="lerCodigoBarras()">
+                                            <i class="fas fa-barcode"></i>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="col-md-3">
@@ -711,3 +718,56 @@ if (@$_GET["funcao"] != null && @$_GET["funcao"] == "similares") {
     echo "<script>$('#modalSimilares').modal('show');</script>";
 }
 ?>
+
+<script>
+function lerCodigoBarras() {
+    // Verifica se o navegador suporta a API de mídia
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        alert('Seu navegador não suporta a leitura de código de barras');
+        return;
+    }
+
+    // Cria um elemento de vídeo temporário
+    const video = document.createElement('video');
+    const canvasElement = document.createElement('canvas');
+    const canvas = canvasElement.getContext('2d');
+
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+        .then(function(stream) {
+            video.srcObject = stream;
+            video.setAttribute("playsinline", true);
+            video.play();
+
+            requestAnimationFrame(function scan() {
+                if (video.readyState === video.HAVE_ENOUGH_DATA) {
+                    canvasElement.height = video.videoHeight;
+                    canvasElement.width = video.videoWidth;
+                    canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
+                    
+                    const imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
+                    
+                    // Aqui você pode usar uma biblioteca de leitura de código de barras
+                    // Por exemplo, usando a biblioteca QuaggaJS:
+                    Quagga.decodeSingle({
+                        decoder: {
+                            readers: ["ean_reader", "ean_8_reader", "code_128_reader", "code_39_reader"]
+                        },
+                        locate: true,
+                        src: canvasElement.toDataURL()
+                    }, function(result) {
+                        if(result && result.codeResult) {
+                            document.getElementById('ref').value = result.codeResult.code;
+                            stream.getTracks().forEach(track => track.stop());
+                        } else {
+                            requestAnimationFrame(scan);
+                        }
+                    });
+                }
+                requestAnimationFrame(scan);
+            });
+        });
+}
+</script>
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/quagga@0.12.1/dist/quagga.min.js"></script>
+</head>
