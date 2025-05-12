@@ -7,7 +7,13 @@ $cpf = $_POST['cpf_mec'];
 $cnpj = $_POST['cnpj_mec'];
 $email = $_POST['email_mec'];
 $endereco = $_POST['endereco_mec'];
-$ibge = $_POST['ibge_mec']; // Adicionando o campo IBGE
+$ibge = $_POST['ibge_mec'];
+$descricao = $_POST['descricao_mec']; // Novo campo
+$inscricao_estadual = $_POST['inscricao_estadual_mec']; // Nova informação
+$inscricao_municipal = $_POST['inscricao_municipal_mec']; // Nova informação
+$razao_social = $_POST['razao_social_mec']; // Nova informação
+$nome_fantasia = $_POST['nome_fantasia_mec']; // Nova informação
+$data_abertura = $_POST['data_abertura_mec']; // Nova informação
 
 $antigo = $_POST['antigo'];
 $antigo2 = $_POST['antigo2'];
@@ -75,7 +81,10 @@ if($id == ""){ // Se for um novo cadastro
 
 if ($id == "") {
    //Metodo para inserir dados no banco de dados
-   $res = $pdo->prepare("INSERT INTO fornecedores (nome, telefone, cpf, email, endereco, tipo_pessoa, ibge) VALUES (:nome, :telefone, :documento, :email, :endereco, :tipo_pessoa, :ibge)");
+   $res = $pdo->prepare("INSERT INTO fornecedores (nome, telefone, cpf, email, endereco, tipo_pessoa, ibge, 
+                         inscricao_estadual, inscricao_municipal, razao_social, nome_fantasia, data_abertura, descricao) 
+                         VALUES (:nome, :telefone, :documento, :email, :endereco, :tipo_pessoa, :ibge,
+                         :inscricao_estadual, :inscricao_municipal, :razao_social, :nome_fantasia, :data_abertura, :descricao)");
    
    $res->bindValue(":nome", $nome);
    $res->bindValue(":telefone", $telefone);
@@ -84,11 +93,32 @@ if ($id == "") {
    $res->bindValue(":endereco", $endereco);
    $res->bindValue(":tipo_pessoa", $tipo_pessoa);
    $res->bindValue(":ibge", $ibge);
+   $res->bindValue(":inscricao_estadual", $inscricao_estadual);
+   $res->bindValue(":inscricao_municipal", $inscricao_municipal);
+   $res->bindValue(":razao_social", $razao_social);
+   $res->bindValue(":nome_fantasia", $nome_fantasia);
+   $res->bindValue(":data_abertura", $data_abertura);
+   $res->bindValue(":descricao", $descricao);
    $res->execute();
 }
 else {
     //Metodo para atualizar dados no banco de dados
-    $res = $pdo->prepare("UPDATE fornecedores SET nome = :nome, telefone = :telefone, cpf = :documento, email = :email, endereco = :endereco, tipo_pessoa = :tipo_pessoa, ibge = :ibge WHERE id = :id");
+    $res = $pdo->prepare("UPDATE fornecedores SET 
+        nome = :nome, 
+        telefone = :telefone, 
+        cpf = :documento, 
+        email = :email, 
+        endereco = :endereco, 
+        tipo_pessoa = :tipo_pessoa, 
+        ibge = :ibge,
+        inscricao_estadual = :inscricao_estadual,
+        inscricao_municipal = :inscricao_municipal,
+        razao_social = :razao_social,
+        nome_fantasia = :nome_fantasia,
+        data_abertura = :data_abertura,
+        descricao = :descricao
+        WHERE id = :id");
+        
     $res->bindValue(":id", $id);
     $res->bindValue(":nome", $nome);
     $res->bindValue(":telefone", $telefone);
@@ -97,6 +127,12 @@ else {
     $res->bindValue(":endereco", $endereco);
     $res->bindValue(":tipo_pessoa", $tipo_pessoa);
     $res->bindValue(":ibge", $ibge);
+    $res->bindValue(":inscricao_estadual", $inscricao_estadual);
+    $res->bindValue(":inscricao_municipal", $inscricao_municipal);
+    $res->bindValue(":razao_social", $razao_social);
+    $res->bindValue(":nome_fantasia", $nome_fantasia);
+    $res->bindValue(":data_abertura", $data_abertura);
+    $res->bindValue(":descricao", $descricao);
     $res->execute();
 }
 

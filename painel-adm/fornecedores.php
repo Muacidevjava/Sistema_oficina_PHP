@@ -121,6 +121,13 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != 'Admin'){
                     $telefone2 = $res[0]['telefone'];
                     $endereco2 = $res[0]['endereco'];
                     $email2 = $res[0]['email'];
+                    $ibge2 = $res[0]['ibge'];
+                    $descricao2 = $res[0]['descricao'];
+                    $inscricao_estadual2 = $res[0]['inscricao_estadual'];
+                    $inscricao_municipal2 = $res[0]['inscricao_municipal'];
+                    $razao_social2 = $res[0]['razao_social'];
+                    $nome_fantasia2 = $res[0]['nome_fantasia'];
+                    $data_abertura2 = $res[0]['data_abertura'];
                 } else {
                     $titulo = "Inserir Registro";
                 }
@@ -218,6 +225,47 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != 'Admin'){
                                 <input value="<?php echo @$ibge2 ?>" type="text" class="form-control" id="ibge" name="ibge_mec" placeholder="Código IBGE" readonly>
                             </div>
                         </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Razão Social</label>
+                                <input value="<?php echo @$razao_social2 ?>" type="text" class="form-control" id="razao_social" name="razao_social_mec" placeholder="Razão Social">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Nome Fantasia</label>
+                                <input value="<?php echo @$nome_fantasia2 ?>" type="text" class="form-control" id="nome_fantasia" name="nome_fantasia_mec" placeholder="Nome Fantasia">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Inscrição Estadual</label>
+                                <input value="<?php echo @$inscricao_estadual2 ?>" type="text" class="form-control" id="inscricao_estadual" name="inscricao_estadual_mec" placeholder="Inscrição Estadual">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Inscrição Municipal</label>
+                                <input value="<?php echo @$inscricao_municipal2 ?>" type="text" class="form-control" id="inscricao_municipal" name="inscricao_municipal_mec" placeholder="Inscrição Municipal">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Data de Abertura</label>
+                                <input value="<?php echo @$data_abertura2 ?>" type="date" class="form-control" id="data_abertura" name="data_abertura_mec">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Descrição da Empresa</label>
+                        <textarea class="form-control" id="descricao" name="descricao_mec" rows="3" placeholder="Descreva as principais atividades e informações da empresa"><?php echo @$descricao2 ?></textarea>
                     </div>
 
 
@@ -459,7 +507,6 @@ if (@$_GET["funcao"] != null && @$_GET["funcao"] == "excluir") {
 
 <!-- Adicione este script antes do fechamento do body -->
 <script type="text/javascript">
-// Función para consultar CNPJ
 function consultarCNPJ() {
     var cnpj = $('#cnpj').val().replace(/[^0-9]/g, '');
     
@@ -474,10 +521,17 @@ function consultarCNPJ() {
         dataType: 'jsonp',
         success: function(data) {
             if(data.status == 'OK') {
+                // Dados básicos
                 $('#nome_mec').val(data.nome);
                 $('#endereco').val(data.logradouro + ', ' + data.numero + ' - ' + data.bairro + ' - ' + data.municipio + '/' + data.uf);
                 $('#telefone').val(data.telefone);
                 $('#email').val(data.email);
+                
+                // Dados adicionais da empresa
+                $('#razao_social').val(data.nome);
+                $('#nome_fantasia').val(data.fantasia);
+                $('#data_abertura').val(data.abertura.split('/').reverse().join('-')); // Converte dd/mm/aaaa para aaaa-mm-dd
+                $('#descricao').val(data.atividade_principal[0].text); // Descrição da atividade principal
                 
                 // Buscar código IBGE pelo município
                 $.ajax({
