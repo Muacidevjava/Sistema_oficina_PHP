@@ -84,6 +84,7 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != 'Admin'){
                             <td>
                                 <a href="index.php?pag=<?php echo $pag ?>&funcao=editar&id=<?php echo $id ?>" class='text-primary mr-1' title='Editar Dados'><i class='far fa-edit'></i></a>
                                 <a href="index.php?pag=<?php echo $pag ?>&funcao=excluir&id=<?php echo $id ?>" class='text-danger mr-1' title='Excluir Registro'><i class='far fa-trash-alt'></i></a>
+                                <a href="index.php?pag=<?php echo $pag ?>&funcao=info&id=<?php echo $id ?>" class='text-info mr-1' title='Informações da Empresa'><i class='fas fa-info-circle'></i></a>
                             </td>
                         </tr>
                     <?php } ?>
@@ -267,6 +268,7 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != 'Admin'){
                         <label>Descrição da Empresa</label>
                         <textarea class="form-control" id="descricao" name="descricao_mec" rows="3" placeholder="Descreva as principais atividades e informações da empresa"><?php echo @$descricao2 ?></textarea>
                     </div>
+
 
 
 
@@ -470,11 +472,331 @@ if (@$_GET["funcao"] != null && @$_GET["funcao"] == "excluir") {
 
 <script type="text/javascript">
     $(document).ready(function() {
-        $('#dataTable').dataTable({
-            "ordering": true
-        })
-
+        // Check if table is already initialized
+        if (!$.fn.DataTable.isDataTable('#dataTable')) {
+            $('#dataTable').dataTable({
+                "ordering": true
+            });
+        }
     });
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        // Verifica o tipo de pessoa ao carregar
+        var tipoPessoa = $('#pessoa').val();
+        if (tipoPessoa === 'Jurídica') {
+            $('#divcnpj').show();
+            $('#divcpf').hide();
+        } else {
+            $('#divcnpj').hide();
+            $('#divcpf').show();
+        }
+        
+        // Monitora mudanças no select
+        $('#pessoa').change(function() {
+            var value = $(this).val();
+            if (value === 'Física') {
+                $('#divcnpj').hide();
+                $('#divcpf').show();
+                $('#cnpj').val('');
+            } else {
+                $('#divcnpj').show();
+                $('#divcpf').hide();
+                $('#cpf').val('');
+            }
+        });
+    });
+</script>
+
+<!-- Adicione este script antes do fechamento do body -->
+<script type="text/javascript">
+function consultarCNPJ() {
+    var cnpj = $('#cnpj').val().replace(/[^0-9]/g, '');
+    
+    if(cnpj.length != 14){
+        alert('CNPJ inválido');
+        return;
+    }
+
+    $.ajax({
+        url: 'https://www.receitaws.com.br/v1/cnpj/' + cnpj,
+        method: 'GET',
+        dataType: 'jsonp',
+        success: function(data) {
+            if(data.status == 'OK') {
+                // Dados básicos
+                $('#nome_mec').val(data.nome);
+                $('#endereco').val(data.logradouro + ', ' + data.numero + ' - ' + data.bairro + ' - ' + data.municipio + '/' + data.uf);
+                $('#telefone').val(data.telefone);
+                $('#email').val(data.email);
+                
+                // Dados adicionais da empresa
+                $('#razao_social').val(data.nome);
+                $('#nome_fantasia').val(data.fantasia);
+                $('#data_abertura').val(data.abertura.split('/').reverse().join('-')); // Converte dd/mm/aaaa para aaaa-mm-dd
+                $('#descricao').val(data.atividade_principal[0].text); // Descrição da atividade principal
+                
+                // Buscar código IBGE pelo município
+                $.ajax({
+                    url: 'https://servicodados.ibge.gov.br/api/v1/localidades/municipios',
+                    method: 'GET',
+                    data: {
+                        nome: data.municipio
+                    },
+                    success: function(municipios) {
+                        if (municipios && municipios.length > 0) {
+                            // Filtra pelo estado correto
+                            var municipioEncontrado = municipios.find(m => 
+                                m.microrregiao.mesorregiao.UF.sigla === data.uf
+                            );
+                            
+                            if (municipioEncontrado) {
+                                $('#ibge').val(municipioEncontrado.id);
+                            }
+                        }
+                    }
+                });
+            } else {
+                alert('CNPJ não encontrado ou erro na consulta');
+            }
+        },
+        error: function() {
+            alert('Erro ao consultar o CNPJ. Tente novamente mais tarde.');
+        }
+    });
+}
+
+// Inicialização de máscaras y eventos
+$(document).ready(function(){
+    // Máscaras para documentos
+    $('#cnpj').mask('00.000.000/0000-00');
+    $('#cpf').mask('000.000.000-00');
+    
+    // Máscara dinámica para teléfono
+    var SPMaskBehavior = function (val) {
+        return val.replace(/\D/g, '').length === 11 ? '(00) 00000-0000' : '(00) 0000-00009';
+    };
+    
+    var spOptions = {
+        onKeyPress: function(val, e, field, options) {
+            field.mask(SPMaskBehavior.apply({}, arguments), options);
+        }
+    };
+    
+    $('#telefone').mask(SPMaskBehavior, spOptions);
+});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+
+
+<!-- Adicione este novo modal para informações -->
+<div class="modal fade" id="modalInfo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Informações da Empresa</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <?php 
+                if(@$_GET['funcao'] == 'info'){
+                    $id2 = $_GET['id'];
+                    $query = $pdo->query("SELECT * FROM fornecedores where id = '$id2'");
+                    $res = $query->fetchAll(PDO::FETCH_ASSOC);
+                    
+                    $nome = $res[0]['nome'];
+                    $tipo_pessoa = $res[0]['tipo_pessoa'];
+                    $cpf = $res[0]['cpf'];
+                    $telefone = $res[0]['telefone'];
+                    $endereco = $res[0]['endereco'];
+                    $email = $res[0]['email'];
+                    $ibge = $res[0]['ibge'];
+                    $descricao = $res[0]['descricao'];
+                    $inscricao_estadual = $res[0]['inscricao_estadual'];
+                    $inscricao_municipal = $res[0]['inscricao_municipal'];
+                    $razao_social = $res[0]['razao_social'];
+                    $nome_fantasia = $res[0]['nome_fantasia'];
+                    $data_abertura = $res[0]['data_abertura'];
+                    ?>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Nome:</strong> <?php echo $nome ?></p>
+                            <p><strong>Tipo Pessoa:</strong> <?php echo $tipo_pessoa ?></p>
+                            <p><strong><?php echo $tipo_pessoa == 'Física' ? 'CPF' : 'CNPJ' ?>:</strong> <?php echo $cpf ?></p>
+                            <p><strong>Telefone:</strong> <?php echo $telefone ?></p>
+                            <p><strong>Email:</strong> <?php echo $email ?></p>
+                            <p><strong>Endereço:</strong> <?php echo $endereco ?></p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Razão Social:</strong> <?php echo $razao_social ?></p>
+                            <p><strong>Nome Fantasia:</strong> <?php echo $nome_fantasia ?></p>
+                            <p><strong>Inscrição Estadual:</strong> <?php echo $inscricao_estadual ?></p>
+                            <p><strong>Inscrição Municipal:</strong> <?php echo $inscricao_municipal ?></p>
+                            <p><strong>Data de Abertura:</strong> <?php echo date('d/m/Y', strtotime($data_abertura)) ?></p>
+                            <p><strong>Código IBGE:</strong> <?php echo $ibge ?></p>
+                        </div>
+                    </div>
+                    
+                    <div class="row mt-3">
+                        <div class="col-md-12">
+                            <p><strong>Descrição da Empresa:</strong></p>
+                            <p><?php echo $descricao ?></p>
+                        </div>
+                    </div>
+                    
+                <?php } ?>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php
+if (@$_GET["funcao"] != null && @$_GET["funcao"] == "info") {
+    echo "<script>$('#modalInfo').modal('show');</script>";
+}
+
+if (@$_GET["funcao"] != null && @$_GET["funcao"] == "novo") {
+    echo "<script>$('#modalDados').modal('show');</script>";
+}
+
+if (@$_GET["funcao"] != null && @$_GET["funcao"] == "editar") {
+    echo "<script>$('#modalDados').modal('show');</script>";
+}
+
+if (@$_GET["funcao"] != null && @$_GET["funcao"] == "excluir") {
+    echo "<script>$('#modal-deletar').modal('show');</script>";
+}
+
+?>
+
+
+
+
+<!--AJAX PARA INSERÇÃO E EDIÇÃO DOS DADOS COM IMAGEM -->
+<script type="text/javascript">
+    $("#form").submit(function() {
+        var pag = "<?= $pag ?>";
+        event.preventDefault();
+        var formData = new FormData(this);
+
+        $.ajax({
+            url: pag + "/inserir.php",
+            type: 'POST',
+            data: formData,
+
+            success: function(mensagem) {
+
+                $('#mensagem').removeClass()
+
+                if (mensagem.trim() == "Salvo com Sucesso!!") {
+                    $('#mensagem').addClass('text-success')
+                    $('#mensagem').text(mensagem)
+                    setTimeout(function() {
+                        $('#btn-fechar').click();
+                        window.location = "index.php?pag=" + pag;
+                    }, 2000); // 2 segundos de atraso
+                } else {
+                    $('#mensagem').addClass('text-danger')
+                    $('#mensagem').text(mensagem)
+                }
+
+                $('#mensagem').text(mensagem)
+
+            },
+
+            cache: false,
+            contentType: false,
+            processData: false,
+            xhr: function() { // Custom XMLHttpRequest
+                var myXhr = $.ajaxSettings.xhr();
+                if (myXhr.upload) { // Avalia se tem suporte a propriedade upload
+                    myXhr.upload.addEventListener('progress', function() {
+                        /* faz alguma coisa durante o progresso do upload */
+                    }, false);
+                }
+                return myXhr;
+            }
+        });
+    });
+</script>
+
+
+
+
+
+<!--AJAX PARA EXCLUSÃO DOS DADOS -->
+<script type="text/javascript">
+    $(document).ready(function() {
+        var pag = "<?= $pag ?>";
+        $('#btn-deletar').click(function(event) {
+            event.preventDefault();
+
+            $.ajax({
+                url: pag + "/excluir.php",
+                method: "post",
+                data: $('form').serialize(),
+                dataType: "text",
+                success: function(mensagem) {
+                    if (mensagem.trim() === 'Excluído com Sucesso!') {
+                        $('#mensagem_excluir').addClass('text-success')
+                        $('#mensagem_excluir').text(mensagem)
+                        setTimeout(function() {
+                            $('#btn-cancelar-excluir').click();
+                            window.location = "index.php?pag=" + pag;
+                        }, 2000); // 2 segundos de atraso
+                    } else {
+                        $('#mensagem_excluir').addClass('text-danger')
+                        $('#mensagem_excluir').text(mensagem)
+                    }
+                },
+            })
+        })
+    })
+</script>
+
+
+
+<!--SCRIPT PARA CARREGAR IMAGEM -->
+<script type="text/javascript">
+    function carregarImg() {
+
+        var target = document.getElementById('target');
+        var file = document.querySelector("input[type=file]").files[0];
+        var reader = new FileReader();
+
+        reader.onloadend = function() {
+            target.src = reader.result;
+        };
+
+        if (file) {
+            reader.readAsDataURL(file);
+
+
+        } else {
+            target.src = "";
+        }
+    }
+</script>
+
+
+
+
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#dataTable').DataTable({
+            destroy: true,
+            ordering: true
+        });
+    });
+
 </script>
 
 <script type="text/javascript">
