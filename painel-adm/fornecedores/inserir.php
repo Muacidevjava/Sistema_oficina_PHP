@@ -7,6 +7,7 @@ $cpf = $_POST['cpf_mec'];
 $cnpj = $_POST['cnpj_mec'];
 $email = $_POST['email_mec'];
 $endereco = $_POST['endereco_mec'];
+$ibge = $_POST['ibge_mec']; // Adicionando o campo IBGE
 
 $antigo = $_POST['antigo'];
 $antigo2 = $_POST['antigo2'];
@@ -74,7 +75,7 @@ if($id == ""){ // Se for um novo cadastro
 
 if ($id == "") {
    //Metodo para inserir dados no banco de dados
-   $res = $pdo->prepare("INSERT INTO fornecedores (nome, telefone, cpf, email, endereco, tipo_pessoa) VALUES (:nome, :telefone, :documento, :email, :endereco, :tipo_pessoa)");
+   $res = $pdo->prepare("INSERT INTO fornecedores (nome, telefone, cpf, email, endereco, tipo_pessoa, ibge) VALUES (:nome, :telefone, :documento, :email, :endereco, :tipo_pessoa, :ibge)");
    
    $res->bindValue(":nome", $nome);
    $res->bindValue(":telefone", $telefone);
@@ -82,11 +83,12 @@ if ($id == "") {
    $res->bindValue(":email", $email);
    $res->bindValue(":endereco", $endereco);
    $res->bindValue(":tipo_pessoa", $tipo_pessoa);
+   $res->bindValue(":ibge", $ibge);
    $res->execute();
 }
 else {
     //Metodo para atualizar dados no banco de dados
-    $res = $pdo->prepare("UPDATE fornecedores SET nome = :nome, telefone = :telefone, cpf = :documento, email = :email, endereco = :endereco, tipo_pessoa = :tipo_pessoa WHERE id = :id");
+    $res = $pdo->prepare("UPDATE fornecedores SET nome = :nome, telefone = :telefone, cpf = :documento, email = :email, endereco = :endereco, tipo_pessoa = :tipo_pessoa, ibge = :ibge WHERE id = :id");
     $res->bindValue(":id", $id);
     $res->bindValue(":nome", $nome);
     $res->bindValue(":telefone", $telefone);
@@ -94,6 +96,7 @@ else {
     $res->bindValue(":email", $email);
     $res->bindValue(":endereco", $endereco);
     $res->bindValue(":tipo_pessoa", $tipo_pessoa);
+    $res->bindValue(":ibge", $ibge);
     $res->execute();
 }
 

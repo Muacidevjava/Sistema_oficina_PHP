@@ -205,9 +205,19 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != 'Admin'){
                         <label>Endereço</label>
                         <input value="<?php echo @$endereco2 ?>" type="text" class="form-control" id="endereco" name="endereco_mec" placeholder="Endereço">
                     </div>
-                    <div class="form-group">
-                        <label>Email</label>
-                        <input value="<?php echo @$email2 ?>" type="text" class="form-control" id="email" name="email_mec" placeholder="email">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input value="<?php echo @$email2 ?>" type="text" class="form-control" id="email" name="email_mec" placeholder="email">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Código IBGE</label>
+                                <input value="<?php echo @$ibge2 ?>" type="text" class="form-control" id="ibge" name="ibge_mec" placeholder="Código IBGE" readonly>
+                            </div>
+                        </div>
                     </div>
 
 
@@ -449,6 +459,7 @@ if (@$_GET["funcao"] != null && @$_GET["funcao"] == "excluir") {
 
 <!-- Adicione este script antes do fechamento do body -->
 <script type="text/javascript">
+// Función para consultar CNPJ
 function consultarCNPJ() {
     var cnpj = $('#cnpj').val().replace(/[^0-9]/g, '');
     
@@ -467,6 +478,27 @@ function consultarCNPJ() {
                 $('#endereco').val(data.logradouro + ', ' + data.numero + ' - ' + data.bairro + ' - ' + data.municipio + '/' + data.uf);
                 $('#telefone').val(data.telefone);
                 $('#email').val(data.email);
+                
+                // Buscar código IBGE pelo município
+                $.ajax({
+                    url: 'https://servicodados.ibge.gov.br/api/v1/localidades/municipios',
+                    method: 'GET',
+                    data: {
+                        nome: data.municipio
+                    },
+                    success: function(municipios) {
+                        if (municipios && municipios.length > 0) {
+                            // Filtra pelo estado correto
+                            var municipioEncontrado = municipios.find(m => 
+                                m.microrregiao.mesorregiao.UF.sigla === data.uf
+                            );
+                            
+                            if (municipioEncontrado) {
+                                $('#ibge').val(municipioEncontrado.id);
+                            }
+                        }
+                    }
+                });
             } else {
                 alert('CNPJ não encontrado ou erro na consulta');
             }
@@ -477,17 +509,24 @@ function consultarCNPJ() {
     });
 }
 
-// Adiciona máscara ao campo CNPJ
+// Inicialização de máscaras y eventos
 $(document).ready(function(){
+    // Máscaras para documentos
     $('#cnpj').mask('00.000.000/0000-00');
     $('#cpf').mask('000.000.000-00');
-    $('#telefone').mask('(00) 00000-0000', {
-        onKeyPress: function(phone, e, field, options) {
-            var masks = ['(00) 00000-0000', '(00) 0000-00009'];
-            var mask = (phone.length > 14) ? masks[0] : masks[1];
-            $('#telefone').mask(mask, options);
+    
+    // Máscara dinámica para teléfono
+    var SPMaskBehavior = function (val) {
+        return val.replace(/\D/g, '').length === 11 ? '(00) 00000-0000' : '(00) 0000-00009';
+    };
+    
+    var spOptions = {
+        onKeyPress: function(val, e, field, options) {
+            field.mask(SPMaskBehavior.apply({}, arguments), options);
         }
-    });
+    };
+    
+    $('#telefone').mask(SPMaskBehavior, spOptions);
 });
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
