@@ -4,6 +4,7 @@ require_once("../../conexao.php");
 $nome = $_POST['nome'];
 $categoria = $_POST['categoria'];
 $fornecedor = $_POST['fornecedor'];
+$ref = $_POST['ref']; // Novo campo de referência
 
 // Corrige formatação dos valores monetários para o padrão brasileiro
 $valor_compra = $_POST['valor_compra'];
@@ -86,13 +87,13 @@ if($antigo != $nome){
 
 try {
     if($id == ""){
-        $res = $pdo->prepare("INSERT INTO produtos (nome, categoria, fornecedor, valor_compra, valor_venda, estoque, descricao, imagem, data_cadastro) VALUES (:nome, :categoria, :fornecedor, :valor_compra, :valor_venda, :estoque, :descricao, :imagem, NOW())");
+        $res = $pdo->prepare("INSERT INTO produtos (nome, categoria, fornecedor, valor_compra, valor_venda, estoque, descricao, imagem, data_cadastro, ref) VALUES (:nome, :categoria, :fornecedor, :valor_compra, :valor_venda, :estoque, :descricao, :imagem, NOW(), :ref)");
         $res->bindValue(":imagem", $imagem);
     } else {
         if($imagem == "sem-foto.jpg" && @$_FILES['imagem']['name'] == ""){
-            $res = $pdo->prepare("UPDATE produtos SET nome = :nome, categoria = :categoria, fornecedor = :fornecedor, valor_compra = :valor_compra, valor_venda = :valor_venda, estoque = :estoque, descricao = :descricao WHERE id = :id");
+            $res = $pdo->prepare("UPDATE produtos SET nome = :nome, categoria = :categoria, fornecedor = :fornecedor, valor_compra = :valor_compra, valor_venda = :valor_venda, estoque = :estoque, descricao = :descricao, ref = :ref WHERE id = :id");
         }else{
-            $res = $pdo->prepare("UPDATE produtos SET nome = :nome, categoria = :categoria, fornecedor = :fornecedor, valor_compra = :valor_compra, valor_venda = :valor_venda, estoque = :estoque, descricao = :descricao, imagem = :imagem WHERE id = :id");
+            $res = $pdo->prepare("UPDATE produtos SET nome = :nome, categoria = :categoria, fornecedor = :fornecedor, valor_compra = :valor_compra, valor_venda = :valor_venda, estoque = :estoque, descricao = :descricao, imagem = :imagem, ref = :ref WHERE id = :id");
             $res->bindValue(":imagem", $imagem);
         }
         $res->bindValue(":id", $id);
@@ -105,6 +106,7 @@ try {
     $res->bindValue(":valor_venda", $valor_venda);
     $res->bindValue(":estoque", $estoque);
     $res->bindValue(":descricao", $descricao);
+    $res->bindValue(":ref", $ref);
 
     $res->execute();
 

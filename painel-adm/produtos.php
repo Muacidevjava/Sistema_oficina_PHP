@@ -35,6 +35,7 @@ require_once("../conexao.php");
                         <th>Valor da Compra</th>
                         <th>Valor de venda</th>
                         <th>Estoque</th>
+                        <th>Referência</th>
                         <th>Imagem</th>
                         <th>Data cadastro</th>
                         <th>Ações</th>
@@ -66,6 +67,7 @@ require_once("../conexao.php");
                         $imagem = $res[$i]['imagem'];
                         $data_cadastro = $res[$i]['data_cadastro'];
                         $id = $res[$i]['id'];
+                        $ref = $res[$i]['ref'];
 
                         ?>
                         <tr>
@@ -76,6 +78,7 @@ require_once("../conexao.php");
                             <td><?php echo 'R$ ' . number_format($valor_compra, 2, ',', '.') ?></td>
                             <td><?php echo 'R$ ' . number_format($valor_venda, 2, ',', '.') ?></td>
                             <td><?php echo $estoque ?></td>
+                            <td><?php echo $ref ?></td>
                             <td>
                                 <?php if($imagem != "") { ?>
                                     <img src="../img/produtos/<?php echo $imagem ?>" width="50" height="50">
@@ -132,6 +135,7 @@ require_once("../conexao.php");
                     $descricao2 = $res[0]['descricao'];
                     $imagem2 = $res[0]['imagem'];
                     $data_cadastro2 = $res[0]['data_cadastro'];
+                    $ref2 = $res[0]['ref'];
                 } else {
                     $titulo = "Inserir Registro";
                 }
@@ -153,7 +157,13 @@ require_once("../conexao.php");
                                 <input value="<?php echo @$id2 ?>" type="text" class="form-control" id="id" name="id" readonly>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Referência</label>
+                                <input value="<?php echo @$ref2 ?>" type="text" class="form-control" id="ref" name="ref" placeholder="Referência do produto">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label>Nome</label>
                                 <input value="<?php echo @$nome2 ?>" type="text" class="form-control" id="nome" name="nome" placeholder="Nome">
