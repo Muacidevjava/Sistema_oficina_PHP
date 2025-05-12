@@ -28,6 +28,7 @@ $menu3 = "fornecedores";
 $menu4 = "categoria";
 $menu5 = "produtos";
 $menu6 = "estoque";
+$menu7 = "compras";
 
 
 
@@ -161,6 +162,12 @@ $menu6 = "estoque";
                         <i class="fas fa-fw fa-chart-area"></i>
                         <span>Estoque BAIXO <?php echo $estoque_baixo ?></span></a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="index.php?pag=<?php echo $menu7 ?>">
+                        <i class="fas fa-coins fa-chart-area"></i>
+                        <span>Compras<?php echo $estoque_baixo ?></span></a>
+                </li>
+                
 
                 <!-- Nav Item - Tables -->
               
@@ -248,6 +255,9 @@ $menu6 = "estoque";
 
                         } else if (@$pag==$menu6) {
                         @include_once(@$menu6.".php");
+
+                        } else if (@$pag==$menu7) {
+                        @include_once(@$menu7.".php");
 
                        
                         
