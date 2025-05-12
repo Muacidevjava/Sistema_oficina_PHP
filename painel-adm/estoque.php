@@ -122,6 +122,8 @@ require_once("../conexao.php"); // Ensure this path is correct
                                 <th>Valor Venda</th>
                                 <th>Estoque</th>
 <th>Quantidade</th>
+<th>Valor Compra</th>
+<th>Valor Venda</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -139,7 +141,9 @@ require_once("../conexao.php"); // Ensure this path is correct
                                     <td>R$ '.number_format($produto['valor_compra'], 2, ',', '.').'</td>
                                     <td>R$ '.number_format($produto['valor_venda'], 2, ',', '.').'</td>
                                     <td>'.$produto['estoque'].'</td>
-<td><input type="number" class="quantidade-input" min="1" value="1"></td>
+<td><input type="number" class="form-control form-control-lg quantidade-input" min="1" value="1" style="width: 100px;"></td>
+<td><input type="text" class="form-control form-control-lg valor-compra" value="'.number_format($produto['valor_compra'], 2, ',', '.').'" style="width: 120px;"></td>
+<td><input type="text" class="form-control form-control-lg valor-venda" value="'.number_format($produto['valor_venda'], 2, ',', '.').'" style="width: 120px;"></td>
                                 </tr>';
                             }
                             ?>
@@ -161,7 +165,15 @@ function adicionarSelecionados() {
     $('.produto-check:checked').each(function() {
         var id = $(this).val();
         var quantidade = $(this).closest('tr').find('.quantidade-input').val();
-        selecionados.push({ id: id, quantidade: quantidade });
+        var valor_compra = $(this).closest('tr').find('.valor-compra').val().replace('.','').replace(',','.');
+        var valor_venda = $(this).closest('tr').find('.valor-venda').val().replace('.','').replace(',','.');
+        
+        selecionados.push({ 
+            id: id, 
+            quantidade: quantidade,
+            valor_compra: valor_compra,
+            valor_venda: valor_venda
+        });
     });
     
     if(selecionados.length > 0) {
@@ -184,6 +196,32 @@ function adicionarSelecionados() {
     } else {
         alert('Selecione pelo menos um produto');
     }
+}
+
+function atualizarEstoque(id) {
+    var estoque = $('#estoque_'+id).val();
+    var valor_compra = $('#valor_compra_'+id).val();
+    var valor_venda = $('#valor_venda_'+id).val();
+    
+    $.ajax({
+        url: 'estoque/atualizar.php',
+        type: 'POST',
+        data: {
+            acao: 'atualizar_estoque',
+            id: id,
+            estoque: estoque,
+            valor_compra: valor_compra,
+            valor_venda: valor_venda
+        },
+        success: function(response) {
+            if(response == 'success') {
+                alert('Produto atualizado com sucesso!');
+                location.reload();
+            } else {
+                alert('Erro: ' + response);
+            }
+        }
+    });
 }
 </script>
 
@@ -307,24 +345,25 @@ function adicionarSelecionados() {
 
 
                     <div class="row">
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label>Valor da Compra</label>
-                                <input value="<?php echo @$valor_compra2 ?>" type="text" class="form-control" id="valor_compra" name="valor_compra" placeholder="Valor da Compra" onchange="calcularVenda()">
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label>Porcentagem de Lucro</label>
-                                <input type="number" class="form-control" id="porcentagem" name="porcentagem" placeholder="%" value="" onchange="calcularVenda()">
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label>Valor da Venda</label>
-                                <input value="<?php echo @$valor_venda2 ?>" type="text" class="form-control" id="valor_venda" name="valor_venda" placeholder="Valor da Venda">
-                            </div>
-                        </div>
+    <div class="col-md-4">
+        <div class="form-group">
+            <label>Valor da Compra</label>
+            <input value="<?php echo @$valor_compra2 ?>" type="text" class="form-control form-control-lg valor-compra" id="valor_compra" name="valor_compra" placeholder="Valor da Compra" onchange="calcularVenda()" style="font-size: 1.1rem; padding: 0.5rem;">
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="form-group">
+            <label>Porcentagem de Lucro</label>
+            <input type="number" class="form-control form-control-lg" id="porcentagem" name="porcentagem" placeholder="%" value="<?php echo @$porcentagem ?>" onchange="calcularVenda()" style="font-size: 1.1rem; padding: 0.5rem;">
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+            <label>Valor da Venda</label>
+            <input value="<?php echo @$valor_venda2 ?>" type="text" class="form-control form-control-lg valor-venda" id="valor_venda" name="valor_venda" placeholder="Valor da Venda" style="font-size: 1.1rem; padding: 0.5rem;">
+        </div>
+    </div>
+</div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label>Estoque</label>
@@ -852,6 +891,28 @@ function lerCodigoBarras() {
         });
 }
 </script>
+<script>
+$(document).ready(function() {
+    // Máscara para valores monetários
+    $('.valor-compra, .valor-venda').inputmask('decimal', {
+        'alias': 'numeric',
+        'groupSeparator': '.',
+        'autoGroup': true,
+        'digits': 2,
+        'digitsOptional': false,
+        'placeholder': '0',
+        'radixPoint': ',',
+        'prefix': 'R$ ',
+        'rightAlign': false
+    });
+    
+    // Ajustar tamanho dos inputs
+    $('.quantidade-input, .valor-compra, .valor-venda').css({
+        'font-size': '1.1rem',
+        'padding': '0.5rem'
+    });
+});
+</script>
 <head>
     <script src="https://cdn.jsdelivr.net/npm/quagga@0.12.1/dist/quagga.min.js"></script>
 </head>
@@ -1319,6 +1380,29 @@ function lerCodigoBarras() {
         });
 }
 </script>
+<script>
+$(document).ready(function() {
+    // Máscara para valores monetários
+    $('.valor-compra, .valor-venda').inputmask('decimal', {
+        'alias': 'numeric',
+        'groupSeparator': '.',
+        'autoGroup': true,
+        'digits': 2,
+        'digitsOptional': false,
+        'placeholder': '0',
+        'radixPoint': ',',
+        'prefix': 'R$ ',
+        'rightAlign': false
+    });
+    
+    // Ajustar tamanho dos inputs
+    $('.quantidade-input, .valor-compra, .valor-venda').css({
+        'font-size': '1.1rem',
+        'padding': '0.5rem'
+    });
+});
+</script>
 <head>
     <script src="https://cdn.jsdelivr.net/npm/quagga@0.12.1/dist/quagga.min.js"></script>
 </head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.6/jquery.inputmask.min.js"></script>

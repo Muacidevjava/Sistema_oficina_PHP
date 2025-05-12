@@ -12,16 +12,22 @@ if ($_POST['acao'] == 'adicionar_pedido') {
             $id_produto = $produto['id'];
             $quantidade = $produto['quantidade'];
             
-            // Atualiza o estoque
-            $query = $pdo->prepare("UPDATE produtos SET estoque = estoque + :quantidade WHERE id = :id");
-            $query->bindValue(":quantidade", $quantidade);
+            // Obter valores atuais do produto
+            $query = $pdo->prepare("SELECT valor_compra, valor_venda FROM produtos WHERE id = :id");
             $query->bindValue(":id", $id_produto);
             $query->execute();
+            $produto_info = $query->fetch(PDO::FETCH_ASSOC);
             
-            // Insere o registro do pedido
-            $query = $pdo->prepare("INSERT INTO pedidos (produto, quantidade, data_pedido) VALUES (:produto, :quantidade, NOW())");
-            $query->bindValue(":produto", $id_produto);
+            // Atualizar estoque e valores
+            $query = $pdo->prepare("UPDATE produtos SET 
+                                  estoque = estoque + :quantidade,
+                                  valor_compra = :valor_compra,
+                                  valor_venda = :valor_venda
+                                  WHERE id = :id");
             $query->bindValue(":quantidade", $quantidade);
+            $query->bindValue(":valor_compra", $produto_info['valor_compra']);
+            $query->bindValue(":valor_venda", $produto_info['valor_venda']);
+            $query->bindValue(":id", $id_produto);
             $query->execute();
         }
         
@@ -32,3 +38,4 @@ if ($_POST['acao'] == 'adicionar_pedido') {
         echo 'Erro: ' . $e->getMessage();
     }
 }
+?>
