@@ -42,7 +42,7 @@ if($antigo != $documento){
     $res = $query->fetchAll(PDO::FETCH_ASSOC);
     $total_reg = @count($res);
     if($total_reg > 0){
-        echo 'Documento já cadastrado!';
+        echo 'Fornecedor já cadastrado!';
         exit();
     }
 }
