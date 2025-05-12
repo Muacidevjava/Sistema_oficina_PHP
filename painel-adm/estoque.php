@@ -95,6 +95,9 @@ require_once("../conexao.php"); // Ensure this path is correct
 </div>
 </div>
 
+<!-- Div para exibir mensagens -->
+<div id="mensagem" class="fixed-top" style="top: 70px; right: 20px; width: 300px; z-index: 9999;"></div>
+
 <!-- Botão para abrir a modal de comparação -->
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalComparar">
     Comprar e Adicionar Produtos
@@ -183,10 +186,13 @@ function adicionarSelecionados() {
             data: { produtos: selecionados, acao: 'adicionar_pedido' },
             success: function(response) {
                 if(response == 'success') {
-                    alert('Produtos adicionados com sucesso!');
-                    location.reload();
+                    $('#mensagem').html('<div class="alert alert-success alert-dismissible fade show"><button type="button" class="close" data-dismiss="alert">&times;</button>Produtos adicionados com sucesso!</div>');
+                    setTimeout(function() {
+                        $('#mensagem').empty();
+                        location.reload();
+                    }, 2000);
                 } else {
-                    alert('Erro ao adicionar produtos: ' + response);
+                    $('#mensagem').html('<div class="alert alert-danger alert-dismissible fade show"><button type="button" class="close" data-dismiss="alert">&times;</button>Erro: ' + response + '</div>');
                 }
             },
             error: function(xhr, status, error) {
