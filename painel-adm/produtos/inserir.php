@@ -120,7 +120,16 @@ try {
     echo 'Erro ao salvar: ' . $e->getMessage();
     exit();
 }
+if ($_POST['alterado'] == '1') {
+    $data_cadastro = date('Y-m-d H:i:s');
+    $query = $pdo->prepare("UPDATE produtos SET data_cadastro = :data WHERE id = :id");
+    $query->bindValue(":data", $data_cadastro);
+    $query->bindValue(":id", $_POST['txtid2']);
+    $query->execute();
+}
 ?>
+
+
 
 
 

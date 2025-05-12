@@ -309,9 +309,9 @@ require_once("../conexao.php");
                 </div>
 
                 <div class="modal-footer">
-                    <input value="<?php echo @$_GET['id'] ?>" type="hidden" name="txtid2" id="txtid2">
+                    <input value="<?php echo @$id2 ?>" type="hidden" name="txtid2" id="txtid2">
                     <input value="<?php echo @$nome2 ?>" type="hidden" name="antigo" id="antigo">
-
+                    <input type="hidden" name="alterado" id="alterado" value="0">
                     <button type="button" id="btn-fechar" class="btn btn-secondary mr-2" data-dismiss="modal">Cancelar</button>
                     <button type="submit" name="btn-salvar" id="btn-salvar" class="btn btn-primary">Salvar</button>
                 </div>
@@ -780,3 +780,14 @@ function lerCodigoBarras() {
 <head>
     <script src="https://cdn.jsdelivr.net/npm/quagga@0.12.1/dist/quagga.min.js"></script>
 </head>
+<script>
+</script>
+
+<script>
+$(document).ready(function() {
+    // Detecta alterações nos campos do formulário
+    $('#form input, #form select, #form textarea').on('change', function() {
+        $('#alterado').val('1');
+    });
+});
+</script>
