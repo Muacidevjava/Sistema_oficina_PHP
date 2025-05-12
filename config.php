@@ -11,4 +11,6 @@ $email_adm = "contato@oficina.com";
  $senha = "root";
  $banco = "oficina";
 
+ //alguas variaveis globais
+ $nivel_estoque = 1; //apartir de x produtos no estoque, o sistema vai avisar que precisa repor
 ?>

@@ -27,7 +27,20 @@ $menu2 = "recepcionistas";
 $menu3 = "fornecedores";
 $menu4 = "categoria";
 $menu5 = "produtos";
-$menu6 = "menu6";
+$menu6 = "estoque";
+
+
+
+//verifica nivel do estoque
+ $query = $pdo->query("SELECT * FROM produtos WHERE estoque < $nivel_estoque");
+ $res = $query->fetchAll(PDO::FETCH_ASSOC);
+ $total_reg = @count($res);
+ if($total_reg > 0){
+     $estoque_baixo = '<span class="badge badge-danger">'.$total_reg.'</span>';
+ } else {
+     $estoque_baixo = '';}
+
+ 
   
 
  ?>
@@ -126,7 +139,7 @@ $menu6 = "menu6";
                             <!-- <h6 class="collapse-header">Dados XX:</h6> -->
                             <a class="collapse-item" href="index.php?pag=<?php echo $menu4 ?>">Categorias</a>
                             <a class="collapse-item" href="index.php?pag=<?php echo $menu5 ?>">Produtos</a>
-                            <a class="collapse-item" href="index.php?pag=<?php echo $menu6 ?>">Menu 5</a>
+                           
 
                         </div>
                     </div>
@@ -146,7 +159,7 @@ $menu6 = "menu6";
                 <li class="nav-item">
                     <a class="nav-link" href="index.php?pag=<?php echo $menu6 ?>">
                         <i class="fas fa-fw fa-chart-area"></i>
-                        <span>Menu 6</span></a>
+                        <span>Estoque BAIXO <?php echo $estoque_baixo ?></span></a>
                 </li>
 
                 <!-- Nav Item - Tables -->

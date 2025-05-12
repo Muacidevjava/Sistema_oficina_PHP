@@ -69,10 +69,15 @@ require_once("../conexao.php");
                         $id = $res[$i]['id'];
                         $ref = $res[$i]['ref'];
 
+                        if ($estoque < $nivel_estoque) {
+                            $cor = "text-danger";
+                        } else {
+                            $cor = "text-dark";}
+
                         ?>
                         <tr>
                             <td><?php echo $id ?></td>
-                            <td><?php echo $nome ?></td>
+                            <td><span class="<?php echo  @$cor ?>"><?php echo $nome ?></span></td>
                             <td><?php echo $categoria ?></td>
                             <td>
                                 <a href="index.php?pag=fornecedores&funcao=info&id=<?php echo $res[$i]['fornecedor'] ?>" class="text-primary">
@@ -81,7 +86,7 @@ require_once("../conexao.php");
                             </td>
                             <td><?php echo 'R$ ' . number_format($valor_compra, 2, ',', '.') ?></td>
                             <td><?php echo 'R$ ' . number_format($valor_venda, 2, ',', '.') ?></td>
-                            <td><?php echo $estoque ?></td>
+                            <td><span class="<?php echo @$cor ?>"><?php echo $estoque ?></span></td>
                             <td><?php echo $ref ?></td>
                             <td>
                                 <?php if($imagem != "") { ?>
