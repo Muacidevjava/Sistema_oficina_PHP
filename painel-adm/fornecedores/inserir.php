@@ -15,6 +15,11 @@ $razao_social = $_POST['razao_social_mec']; // Nova informação
 $nome_fantasia = $_POST['nome_fantasia_mec']; // Nova informação
 $data_abertura = $_POST['data_abertura_mec']; // Nova informação
 
+// Validate and format date_abertura
+if(empty($data_abertura)) {
+    $data_abertura = null; // Set to NULL if empty
+}
+
 $antigo = $_POST['antigo'];
 $antigo2 = $_POST['antigo2'];
 $id = $_POST['txtid2'];
