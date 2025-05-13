@@ -126,7 +126,7 @@ require_once("../conexao.php"); // Ensure this path is correct
                                 <th>Estoque</th>
                                 <th>Quantidade</th>
                                <th>Valor Compra</th>
-                                 <th>Valor Venda</th>
+                                <th>Valor Venda</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -144,9 +144,9 @@ require_once("../conexao.php"); // Ensure this path is correct
                                     <td>R$ '.number_format($produto['valor_compra'], 2, ',', '.').'</td>
                                     <td>R$ '.number_format($produto['valor_venda'], 2, ',', '.').'</td>
                                     <td>'.$produto['estoque'].'</td>
-                                   <td><input type="number" class="form-control form-control-lg quantidade-input" min="1" value="1" style="width: 100px;"></td>
-                                   <td><input type="text" class="form-control form-control-lg valor-compra" value="'.number_format($produto['valor_compra'], 2, ',', '.').'" style="width: 120px;"></td>
-                                    <td><input type="text" class="form-control form-control-lg valor-venda" value="'.number_format($produto['valor_venda'], 2, ',', '.').'" style="width: 120px;"></td>
+                                    <td><input type="number" class="form-control form-control-lg quantidade-input" min="1" value="1" style="width: 100px;"></td>
+                                    <td><input type="text" class="form-control form-control-lg valor-compra" value="'.number_format($produto['valor_compra'], 2, ',', '.').'" style="width: 120px;"></td>
+                                       <td><input type="text" class="form-control form-control-lg valor-venda" value="'.number_format($produto['valor_venda'], 2, ',', '.').'" style="width: 120px;"></td>
                                 </tr>';
                             }
                             ?>
