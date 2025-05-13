@@ -4,24 +4,27 @@ require_once("../../conexao.php");
 $id = $_POST['id'];
 
 try {
-    // Verificar se existem produtos vinculados a esta categoria
-    $check = $pdo->prepare("SELECT COUNT(*) FROM produtos WHERE categoria = :id");
-    $check->bindValue(":id", $id);
-    $check->execute();
+    // Primeiro verificar se a conta não está paga
+    $query = $pdo->prepare("SELECT status FROM contas_pagar WHERE id = ?");
+    $query->execute([$id]);
+    $result = $query->fetch(PDO::FETCH_ASSOC);
     
-    if($check->fetchColumn() > 0) {
-        echo "Não é possível excluir! Existem produtos cadastrados nesta categoria.";
+    if (strtolower($result['status']) == 'pago') {
+        echo json_encode(['erro' => true, 'mensagem' => 'Não é possível excluir uma conta já paga!']);
         exit();
     }
 
-    // Excluir a categoria
-    $res = $pdo->prepare("DELETE FROM categorias WHERE id = :id");
-    $res->bindValue(":id", $id);
-    $res->execute();
+    // Excluir registros relacionados na tabela compras
+    $query = $pdo->prepare("DELETE FROM compras WHERE id_conta = ?");
+    $query->execute([$id]);
 
-    echo "Excluído com Sucesso!";
-    
+    // Excluir a conta
+    $query = $pdo->prepare("DELETE FROM contas_pagar WHERE id = ?");
+    $query->execute([$id]);
+
+    echo json_encode(['erro' => false, 'mensagem' => 'Excluído com sucesso!']);
+
 } catch(PDOException $e) {
-    echo "Erro ao excluir categoria: " . $e->getMessage();
+    echo json_encode(['erro' => true, 'mensagem' => 'Erro ao excluir: ' . $e->getMessage()]);
 }
 ?>
