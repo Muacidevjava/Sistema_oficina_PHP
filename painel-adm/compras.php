@@ -2,17 +2,23 @@
 session_start();
 
 // Verificação de acesso do administrador
-if($_SESSION['nivel_usuario'] == null || $_SESSION['nivel_usuario'] != 'admin') {
-  echo "<script>window.location='../index.php'</script>";
+if ($_SESSION['nivel_usuario'] == null || $_SESSION['nivel_usuario'] != 'admin') {
+    echo "<script>window.location='../index.php'</script>";
 }
 $pag = "compras";
 require_once("../conexao.php");
 
+// Verificação adicional no script de exclusão
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['funcao']) && $_POST['funcao'] == 'excluir' && $_SESSION['nivel_usuario'] == 'admin') {
+    $id = $_POST['id'];
+    $query = $pdo->prepare("DELETE FROM compras WHERE id = :id");
+    $query->bindValue(":id", $id);
+    $query->execute();
+    echo 'Excluído com Sucesso!';
+} else {
+    echo 'Acesso negado!';
+}
 ?>
-
-
-
-
 
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
@@ -23,8 +29,8 @@ require_once("../conexao.php");
                 <thead>
                     <tr>
                         <th>Descrição</th>
-                        <th>Valor Comprado</th>
-                        <th>Funcionario que Comprou</th>
+                        <th>Valor</th>
+                        <th>Funcionario</th>
                         <th>Data Compra</th>
                         <th>Ações</th>
                         
@@ -35,14 +41,14 @@ require_once("../conexao.php");
 
                     <?php
 
-                    $query = $pdo->query("SELECT compras.*, usuarios.nome AS nome_funcionario FROM compras JOIN usuarios ON compras.funcionario = usuarios.id ORDER BY compras.id DESC");
+                    $query = $pdo->query("SELECT compras.*, usuarios.nome AS nome_funcionario, produtos.nome AS nome_produto FROM compras JOIN usuarios ON compras.funcionario = usuarios.id JOIN produtos ON compras.id_produto = produtos.id ORDER BY compras.id DESC");
                     $res = $query->fetchAll(PDO::FETCH_ASSOC);
 
                     for ($i = 0; $i < count($res); $i++) {
                         foreach ($res[$i] as $key => $value) {
                         }
 
-                        $descricao = $res[$i]['descricao'];
+                        $descricao = $res[$i]['descricao'] . " - " . $res[$i]['nome_produto'];
                         $valor = $res[$i]['valor'];
                         $nome_funcionario = $res[$i]['nome_funcionario'];
                         $data_compra = $res[$i]['data_compra'];
@@ -53,33 +59,21 @@ require_once("../conexao.php");
                         
                         // Formatar data para exibição
                         $data_formatada = date('d/m/Y H:i', strtotime($data_compra));
-                        // $telefone = $res[$i]['telefone'];
-                        // $endereco = $res[$i]['endereco'];
-                        // $email = $res[$i]['email'];
-                        // $id = $res[$i]['id'];
-
-
-
-
 
                     ?>
 
-
                         <tr>
-                            
                             <td><?php echo $descricao ?></td>
                             <td><?php echo $valor_formatado ?></td>
                             <td><?php echo $nome_funcionario ?></td>
                             <td><?php echo $data_formatada ?></td>
                             <td>
-                                <a href="index.php?pag=<?php echo $pag ?>&funcao=excluir&id=<?php echo $id ?>" class='text-danger mr-1' title='Excluir Registro'><i class='far fa-trash-alt'></i></a>
+                                <?php if ($_SESSION['nivel_usuario'] == 'admin') { ?>
+                                    <button class='btn-delete text-danger mr-1' data-id="<?php echo $id ?>" title='Excluir Registro'><i class='far fa-trash-alt'></i></button>
+                                <?php } ?>
                             </td>
                         </tr>
                     <?php } ?>
-
-
-
-
 
                 </tbody>
             </table>
@@ -361,6 +355,76 @@ if (@$_GET["funcao"] != null && @$_GET["funcao"] == "excluir") {
             "ordering": true
         })
 
+    });
+</script>
+
+
+
+
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('.btn-delete').click(function(event) {
+            event.preventDefault();
+            var id = $(this).data('id');
+
+            $.ajax({
+                url: 'compras/excluir.php',
+                method: 'GET',
+                data: {id: id},
+                success: function(response) {
+                    alert(response);
+                    window.location.reload();
+                },
+                error: function() {
+                    alert('Erro ao excluir o registro.');
+                }
+            });
+        });
+    });
+</script>
+
+
+
+<small>
+    <div id="mensagem">
+        <!-- Mensagem de sucesso ou erro será exibida aqui -->
+    </div>
+</small>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        // Função para ocultar a mensagem após 3 segundos
+        function ocultarMensagem() {
+            setTimeout(function() {
+                $('#mensagem').fadeOut('slow');
+            }, 3000); // 3000 milissegundos = 3 segundos
+        }
+
+        // Chama a função para ocultar a mensagem após a exclusão
+        $('#btn-deletar').click(function(event) {
+            event.preventDefault();
+
+            $.ajax({
+                url: pag + "/excluir.php",
+                method: "post",
+                data: $('form').serialize(),
+                dataType: "text",
+                success: function(mensagem) {
+                    $('#mensagem_excluir').text(mensagem);
+                    if (mensagem.trim() === 'Excluído com Sucesso!') {
+                        $('#mensagem_excluir').addClass('text-success');
+                        setTimeout(function() {
+                            $('#btn-cancelar-excluir').click();
+                            window.location = "index.php?pag=" + pag;
+                        }, 2000); // 2 segundos de atraso
+                    } else {
+                        $('#mensagem_excluir').addClass('text-danger');
+                    }
+                    ocultarMensagem(); // Oculta a mensagem após 3 segundos
+                },
+            });
+        });
     });
 </script>
 
