@@ -25,8 +25,8 @@ if($total_reg > 0){
     else if($_SESSION['nivel_usuario'] == 'mecanico'){
         echo "<script>window.location='painel-mecanico'</script>";
     }
-    else if($_SESSION['nivel_usuario'] == 'recepcionista'){
-        echo "<script>window.location='painel-recep'</script>";
+    else if($_SESSION['nivel_usuario'] == 'recep'){
+        echo "<script>window.location='painel-recepcao'</script>";
     }
 } else {
     echo "<script>window.alert('Dados Incorretos!')</script>";
