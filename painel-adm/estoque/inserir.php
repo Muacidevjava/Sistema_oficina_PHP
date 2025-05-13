@@ -12,9 +12,12 @@ if ($_POST['acao'] == 'adicionar_pedido') {
             $id_produto = $produto['id'];
             $quantidade = $produto['quantidade'];
             
-            // Converter valores de moeda para decimal
-            $valor_compra = str_replace(['R$', '.', ','], ['', '', '.'], $produto['valor_compra']);
-            $valor_venda = str_replace(['R$', '.', ','], ['', '', '.'], $produto['valor_venda']);
+            // Corrigindo a conversão dos valores monetários
+            $valor_compra = str_replace(['R$', ' '], '', $produto['valor_compra']);
+            $valor_compra = str_replace(',', '.', $valor_compra);
+            
+            $valor_venda = str_replace(['R$', ' '], '', $produto['valor_venda']);
+            $valor_venda = str_replace(',', '.', $valor_venda);
             
             $query = $pdo->prepare("UPDATE produtos SET 
                                   estoque = estoque + :quantidade,
