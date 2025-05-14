@@ -348,7 +348,27 @@ $(document).ready(function(){
                         <div id="mensagem-conta-avulsa"></div>
                     </small>
                 </div>
+             <div class="col-md-6">
+                <div class="row">
+                       
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Imagem</label>
+                                <input type="file" value="<?php echo @$imagem2 ?>" class="form-control-file" id="imagem" name="imagem" onChange="carregarImg()" accept="image/jpeg,image/jpg,image/png,image/gif">
+                            </div>
 
+                            <div id="divImg">
+                                <?php if(@$imagem2 != "") { ?>
+                                    <img src="../img/contas/<?php echo $imagem2 ?>" width="100" height="100" id="target">
+                                <?php } else { ?>
+                                    <img src="../img/contas/sem-foto.jpg" width="100" height="100" id="target">
+                                <?php } ?>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                     <button type="submit" class="btn btn-primary">Salvar</button>
