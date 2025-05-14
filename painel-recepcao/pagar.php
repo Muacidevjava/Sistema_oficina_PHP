@@ -77,11 +77,11 @@ require_once("../conexao.php");
                         $res_tot = $query_tot->fetchAll(PDO::FETCH_ASSOC);
                         $total_produtos = @count($res_tot);
 
-                        $query_func = $pdo->prepare("SELECT u.nome as nome_funcionario 
+                        $query_func = $pdo->prepare("SELECT u.nome as nome_funcionario
                                                    FROM compras c 
                                                    INNER JOIN contas_pagar cp ON c.id_conta = cp.id 
                                                    INNER JOIN usuarios u ON c.funcionario = u.id
-                                                   WHERE cp.id = ?");
+                                                   WHERE cp.id = ? ");
                         $query_func->execute([$id]);
                         $res_func = $query_func->fetchAll(PDO::FETCH_ASSOC);
                         $nome_funcionario = $res_func[0]['nome_funcionario'] ?? 'Funcionário não encontrado';
