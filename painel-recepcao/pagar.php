@@ -12,10 +12,8 @@ require_once("../conexao.php");
 ?>
 
 <div class="row mt-4 mb-4">
-    
-    <a type="button" onclick="abrirModalContaAvulsa()" style = "color:white" class="btn-danger btn-sm ml-3 d-none d-md-block" <?php echo $pag ?>&funcao=novo">Adicionar Conta Avulsa</a>
-    <a type="button" class="btn-primary btn-sm ml-3 d-block d-sm-none" href="index.php?pag=<?php echo $pag ?>&funcao=novo">+</a>
-
+    <a type="button" onclick="abrirModalContaAvulsa()" style="color:white" class="btn btn-danger btn-sm ml-3 d-none d-md-block">Adicionar Contas Avulsas</a>
+    <a type="button" onclick="abrirModalContaAvulsa()" class="btn btn-primary btn-sm ml-3 d-block d-sm-none">+</a>
 </div>
 
 
